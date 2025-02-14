@@ -27,7 +27,7 @@ function Home() {
         // Fetch random Pokemon cards from TCGdex for the trending section
         // I'm using TCGdex here because it guarantees card images will load
         const [cardsRes, listingsRes] = await Promise.all([
-          cardAPI.random(8),
+          cardAPI.random(10),
           listingAPI.getAll({ limit: 4 }),
         ]);
 
