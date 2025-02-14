@@ -56,6 +56,31 @@
 }
 
 /* ============================================
+   DARK MODE OVERRIDES
+   When data-theme="dark" is set on <html>,
+   these variables override the light defaults.
+   ============================================ */
+
+[data-theme="dark"] {
+  /* Background colors - dark slate palette */
+  --color-background: #0f172a;
+  --color-surface: #1e293b;
+  --color-surface-hover: #334155;
+
+  /* Text colors - light on dark */
+  --color-text: #f1f5f9;
+  --color-text-secondary: #94a3b8;
+
+  /* Border colors */
+  --color-border: #334155;
+
+  /* Shadows - more visible on dark backgrounds */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.5);
+}
+
+/* ============================================
    GLOBAL RESET & BASE STYLES
    ============================================ */
 

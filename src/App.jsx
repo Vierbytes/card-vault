@@ -11,6 +11,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Auth0Provider } from '@auth0/auth0-react';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 import { ToastProvider } from './context/ToastContext';
 
 // Layout components
@@ -95,6 +96,7 @@ function App() {
         }}
       >
       <AuthProvider>
+        <ThemeProvider>
         <ToastProvider>
         <AppLayout>
           <Routes>
@@ -189,6 +191,7 @@ function App() {
           </Routes>
         </AppLayout>
         </ToastProvider>
+        </ThemeProvider>
       </AuthProvider>
       </Auth0Provider>
     </Router>

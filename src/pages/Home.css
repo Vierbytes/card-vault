@@ -229,7 +229,7 @@
 }
 
 .cta-section .btn {
-  background-color: white;
+  background-color: var(--color-surface);
   color: var(--color-primary);
 }
 
