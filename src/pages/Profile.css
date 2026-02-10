@@ -1,0 +1,170 @@
+/**
+ * Profile Page Styles
+ *
+ * Simple form-based layout with two sections.
+ * I kept it centered and narrow for readability.
+ */
+
+/* ============================================
+   PAGE LAYOUT
+   ============================================ */
+
+.profile-page {
+  max-width: 650px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.profile-header {
+  margin-bottom: 2rem;
+}
+
+.profile-header h1 {
+  font-size: 2rem;
+  margin-bottom: 0.25rem;
+}
+
+.profile-header p {
+  color: var(--color-text-secondary);
+}
+
+/* ============================================
+   TOAST
+   ============================================ */
+
+.profile-page .toast {
+  position: fixed;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  z-index: 1000;
+  animation: slideDown 0.3s ease;
+}
+
+.profile-page .toast.success {
+  background: var(--color-success);
+  color: white;
+}
+
+.profile-page .toast.error {
+  background: var(--color-danger);
+  color: white;
+}
+
+/* ============================================
+   SECTIONS
+   ============================================ */
+
+.profile-section {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 1.5rem;
+}
+
+.profile-section h2 {
+  font-size: 1.25rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* ============================================
+   FORM STYLING
+   ============================================ */
+
+.profile-section .form-group {
+  margin-bottom: 1.25rem;
+}
+
+.profile-section label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+  font-size: 0.9rem;
+}
+
+.profile-section input,
+.profile-section textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+.profile-section textarea {
+  resize: vertical;
+}
+
+.disabled-input {
+  background: var(--color-background);
+  color: var(--color-text-secondary);
+  cursor: not-allowed;
+}
+
+.input-hint {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  margin-top: 0.25rem;
+}
+
+.error-box {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: var(--color-danger);
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+/* ============================================
+   GAMES GRID (FAVORITE GAMES)
+   ============================================ */
+
+.games-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.game-chip {
+  padding: 0.5rem 1rem;
+  border: 2px solid var(--color-border);
+  border-radius: 20px;
+  background: var(--color-surface);
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  color: var(--color-text);
+}
+
+.game-chip:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.game-chip.selected {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: white;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 768px) {
+  .profile-page {
+    padding: 1.5rem 1rem;
+  }
+}

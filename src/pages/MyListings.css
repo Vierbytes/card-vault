@@ -1,0 +1,337 @@
+/**
+ * My Listings Page Styles
+ *
+ * List layout (not grid) for managing listings.
+ * Each listing is a row with thumbnail, info, price, and actions.
+ * I thought a list view makes more sense here since the focus is
+ * on managing, not browsing.
+ */
+
+/* ============================================
+   PAGE LAYOUT
+   ============================================ */
+
+.my-listings-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
+
+.my-listings-page .listings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.my-listings-page .header-text h1 {
+  font-size: 2rem;
+  margin-bottom: 0.25rem;
+}
+
+.my-listings-page .header-text p {
+  color: var(--color-text-secondary);
+}
+
+/* ============================================
+   STATUS TABS
+   ============================================ */
+
+.status-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid var(--color-border);
+  padding-bottom: 0;
+}
+
+.tab {
+  padding: 0.75rem 1.25rem;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--color-text-secondary);
+  transition: all 0.2s ease;
+  margin-bottom: -2px;
+  font-family: inherit;
+}
+
+.tab:hover {
+  color: var(--color-text);
+}
+
+.tab.active {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+}
+
+/* ============================================
+   LISTINGS LIST
+   ============================================ */
+
+.listings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.listing-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--color-surface);
+  padding: 1rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s ease;
+}
+
+.listing-row:hover {
+  box-shadow: var(--shadow-md);
+}
+
+/* Dim sold listings slightly */
+.listing-row.sold {
+  opacity: 0.7;
+}
+
+/* ============================================
+   LISTING THUMBNAIL
+   ============================================ */
+
+.listing-thumb {
+  width: 60px;
+  height: 80px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--color-background);
+}
+
+.listing-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.thumb-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-size: 1.5rem;
+}
+
+/* ============================================
+   LISTING INFO
+   ============================================ */
+
+.listing-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.listing-name {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.2rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.listing-meta {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+}
+
+/* ============================================
+   PRICE & STATUS
+   ============================================ */
+
+.listing-price {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  white-space: nowrap;
+}
+
+.status-badge {
+  padding: 0.3rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.status-badge.active {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status-badge.sold {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.status-badge.cancelled {
+  background: #fef2f2;
+  color: #991b1b;
+}
+
+/* ============================================
+   ACTIONS
+   ============================================ */
+
+.listing-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.sold-label {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+  font-style: italic;
+}
+
+/* ============================================
+   TOAST NOTIFICATION
+   ============================================ */
+
+.my-listings-page .toast {
+  position: fixed;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  z-index: 1000;
+  animation: slideDown 0.3s ease;
+}
+
+.my-listings-page .toast.success {
+  background: var(--color-success);
+  color: white;
+}
+
+.my-listings-page .toast.error {
+  background: var(--color-danger);
+  color: white;
+}
+
+/* ============================================
+   EMPTY / ERROR / LOADING
+   ============================================ */
+
+.my-listings-page .listings-empty,
+.my-listings-page .listings-error {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.my-listings-page .empty-icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.my-listings-page .listings-empty h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.my-listings-page .listings-empty p,
+.my-listings-page .listings-error p {
+  color: var(--color-text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+/* Skeleton loading */
+.listings-loading {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.listing-skeleton-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--color-surface);
+  padding: 1rem;
+  border-radius: var(--radius-lg);
+}
+
+.skeleton-thumb {
+  width: 60px;
+  height: 80px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.listing-skeleton-row .skeleton-details {
+  flex: 1;
+}
+
+.listing-skeleton-row .skeleton-text {
+  height: 14px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}
+
+.listing-skeleton-row .skeleton-text.short {
+  width: 40%;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 768px) {
+  .my-listings-page {
+    padding: 1.5rem 1rem;
+  }
+
+  .listing-row {
+    flex-wrap: wrap;
+  }
+
+  .listing-actions {
+    width: 100%;
+    justify-content: flex-end;
+    margin-top: 0.5rem;
+  }
+
+  .status-badge {
+    order: -1;
+  }
+}
+
+@media (max-width: 480px) {
+  .listing-price {
+    font-size: 0.95rem;
+  }
+
+  .listing-actions .btn {
+    font-size: 0.7rem;
+    padding: 0.3rem 0.5rem;
+  }
+}
