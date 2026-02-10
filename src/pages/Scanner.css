@@ -1,0 +1,351 @@
+/**
+ * Card Scanner Page Styles
+ *
+ * Camera viewfinder, image preview, and results layout.
+ * The scanning animation adds a nice touch of interactivity.
+ */
+
+/* ============================================
+   PAGE LAYOUT
+   ============================================ */
+
+.scanner-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.scanner-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.scanner-header h1 {
+  font-size: 2rem;
+  margin-bottom: 0.25rem;
+}
+
+.scanner-header p {
+  color: var(--color-text-secondary);
+}
+
+.scanner-error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: var(--color-danger);
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+/* ============================================
+   SCANNER OPTIONS (INITIAL STATE)
+   ============================================ */
+
+.scanner-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.scanner-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1.5rem;
+  background: var(--color-surface);
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-xl);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  color: inherit;
+}
+
+.scanner-option:hover {
+  border-color: var(--color-primary);
+  background: #f8f7ff;
+  transform: translateY(-2px);
+}
+
+.option-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.option-title {
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+
+.option-desc {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+  text-align: center;
+}
+
+/* ============================================
+   CAMERA VIEWFINDER
+   ============================================ */
+
+.camera-section {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.camera-viewfinder {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: #000;
+  aspect-ratio: 3 / 4;
+}
+
+.camera-viewfinder video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.viewfinder-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.viewfinder-frame {
+  width: 80%;
+  height: 60%;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  border-radius: var(--radius-lg);
+}
+
+.camera-controls {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.capture-btn {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  font-size: 0;
+  position: relative;
+}
+
+.capture-btn::after {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  border: 3px solid white;
+}
+
+/* ============================================
+   IMAGE PREVIEW
+   ============================================ */
+
+.preview-section {
+  max-width: 400px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.image-preview {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: 1rem;
+  box-shadow: var(--shadow-md);
+}
+
+.image-preview img {
+  width: 100%;
+  display: block;
+}
+
+.preview-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+/* ============================================
+   SCANNING ANIMATION
+   ============================================ */
+
+.scanning-indicator {
+  text-align: center;
+  padding: 2rem;
+}
+
+.scan-animation {
+  width: 200px;
+  height: 280px;
+  margin: 0 auto 1rem;
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.scan-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--color-primary), transparent);
+  animation: scanMove 2s ease-in-out infinite;
+}
+
+@keyframes scanMove {
+  0% {
+    top: 0;
+  }
+  50% {
+    top: 100%;
+  }
+  100% {
+    top: 0;
+  }
+}
+
+.scanning-indicator p {
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+/* ============================================
+   RESULTS
+   ============================================ */
+
+.results-section {
+  margin-top: 1rem;
+}
+
+.results-section h2 {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.manual-search {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.manual-search input {
+  flex: 1;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: 0.95rem;
+}
+
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.scanner-page .result-card {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.scanner-page .result-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  text-decoration: none;
+}
+
+.scanner-page .result-image {
+  aspect-ratio: 3 / 4;
+  background: var(--color-background);
+  overflow: hidden;
+}
+
+.scanner-page .result-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.scanner-page .result-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-size: 2rem;
+}
+
+.scanner-page .result-info {
+  padding: 0.5rem;
+}
+
+.scanner-page .result-name {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.scanner-page .result-set {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 0.25rem;
+}
+
+.scanner-page .result-price {
+  font-weight: 700;
+  color: var(--color-primary);
+  font-size: 0.85rem;
+}
+
+.no-results {
+  text-align: center;
+  padding: 2rem;
+  color: var(--color-text-secondary);
+}
+
+.scan-again-btn {
+  display: block;
+  margin: 1.5rem auto 0;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 768px) {
+  .scanner-page {
+    padding: 1.5rem 1rem;
+  }
+
+  .scanner-options {
+    grid-template-columns: 1fr;
+    max-width: 300px;
+  }
+
+  .results-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

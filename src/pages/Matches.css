@@ -1,0 +1,311 @@
+/**
+ * Matches Page Styles
+ *
+ * List layout showing matched buyers and sellers.
+ * Each match shows the card, the other user, and pricing info.
+ */
+
+/* ============================================
+   PAGE LAYOUT
+   ============================================ */
+
+.matches-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.matches-header {
+  margin-bottom: 1.5rem;
+}
+
+.matches-header h1 {
+  font-size: 2rem;
+  margin-bottom: 0.25rem;
+}
+
+.matches-header p {
+  color: var(--color-text-secondary);
+}
+
+/* ============================================
+   TABS
+   ============================================ */
+
+.match-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid var(--color-border);
+}
+
+.match-tabs .tab {
+  padding: 0.75rem 1.25rem;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--color-text-secondary);
+  transition: all 0.2s ease;
+  margin-bottom: -2px;
+  font-family: inherit;
+}
+
+.match-tabs .tab:hover {
+  color: var(--color-text);
+}
+
+.match-tabs .tab.active {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+}
+
+/* ============================================
+   MATCHES LIST
+   ============================================ */
+
+.matches-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.match-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--color-surface);
+  padding: 1rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s ease;
+}
+
+.match-row:hover {
+  box-shadow: var(--shadow-md);
+}
+
+/* ============================================
+   CARD INFO (LEFT SIDE)
+   ============================================ */
+
+.match-card-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+  min-width: 0;
+  text-decoration: none;
+  color: inherit;
+}
+
+.match-card-info:hover {
+  text-decoration: none;
+}
+
+.match-thumb {
+  width: 50px;
+  height: 70px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--color-background);
+}
+
+.match-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.thumb-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-size: 1.5rem;
+}
+
+.match-details h3 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 0.15rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.match-details p {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+}
+
+/* ============================================
+   SELLER / BUYER INFO
+   ============================================ */
+
+.match-seller-info,
+.match-buyer-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+}
+
+.seller-details,
+.buyer-details {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.seller-avatar,
+.buyer-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.seller-name,
+.buyer-name {
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.match-pricing {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.match-price {
+  font-weight: 700;
+  color: var(--color-primary);
+  font-size: 1rem;
+}
+
+.match-condition {
+  font-size: 0.75rem;
+  background: var(--color-background);
+  padding: 0.15rem 0.4rem;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-secondary);
+}
+
+.max-price {
+  font-size: 0.8rem;
+  color: var(--color-success);
+  font-weight: 500;
+}
+
+/* ============================================
+   EMPTY / ERROR / LOADING
+   ============================================ */
+
+.matches-empty,
+.matches-error {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.matches-empty .empty-icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.matches-empty h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.matches-empty p,
+.matches-error p {
+  color: var(--color-text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+/* Skeleton */
+.matches-loading {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.match-skeleton {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--color-surface);
+  padding: 1rem;
+  border-radius: var(--radius-lg);
+}
+
+.match-skeleton .skeleton-thumb {
+  width: 50px;
+  height: 70px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.match-skeleton .skeleton-details {
+  flex: 1;
+}
+
+.match-skeleton .skeleton-text {
+  height: 14px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}
+
+.match-skeleton .skeleton-text.short {
+  width: 40%;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 768px) {
+  .matches-page {
+    padding: 1.5rem 1rem;
+  }
+
+  .match-row {
+    flex-wrap: wrap;
+  }
+
+  .match-seller-info,
+  .match-buyer-info {
+    align-items: flex-start;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--color-border);
+  }
+}
