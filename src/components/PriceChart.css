@@ -1,0 +1,132 @@
+/**
+ * PriceChart Styles
+ */
+
+.price-chart-container {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.price-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.current-price {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.price-changes {
+  display: flex;
+  gap: 1rem;
+}
+
+.change {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.change.positive {
+  color: var(--color-success);
+}
+
+.change.negative {
+  color: var(--color-danger);
+}
+
+/* Duration selector */
+.duration-selector {
+  display: flex;
+  gap: 0.5rem;
+  background-color: var(--color-surface-hover);
+  padding: 0.25rem;
+  border-radius: 8px;
+}
+
+.duration-btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  background: none;
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.duration-btn:hover {
+  color: var(--color-text);
+}
+
+.duration-btn.active {
+  background-color: var(--color-surface);
+  color: var(--color-primary);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Chart wrapper */
+.chart-wrapper {
+  height: 300px;
+  position: relative;
+}
+
+/* Loading and error states */
+.chart-loading,
+.chart-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: var(--color-text-secondary);
+}
+
+.chart-error {
+  color: var(--color-danger);
+}
+
+/* Note shown when price tracking just started */
+.chart-note {
+  text-align: center;
+  color: var(--color-text-secondary);
+  font-size: 0.85rem;
+  margin-top: 1rem;
+  padding: 0.5rem;
+  font-style: italic;
+}
+
+/* ============================================
+   RESPONSIVE STYLES
+   ============================================ */
+
+@media (max-width: 768px) {
+  .price-chart-container {
+    padding: 1rem;
+  }
+
+  .chart-header {
+    flex-direction: column;
+  }
+
+  .chart-wrapper {
+    height: 250px;
+  }
+
+  .current-price {
+    font-size: 1.5rem;
+  }
+}
