@@ -55,6 +55,82 @@
 }
 
 /* ============================================
+   AVATAR SECTION
+   I wanted the avatar to feel interactive, so I added a hover
+   overlay that says "Change" - makes it obvious you can click it.
+   ============================================ */
+
+.avatar-section {
+  text-align: center;
+}
+
+.avatar-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.avatar-display {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  background: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid var(--color-border);
+  transition: border-color 0.2s ease;
+}
+
+.avatar-display:hover {
+  border-color: var(--color-primary);
+}
+
+.avatar-display img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-fallback {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: white;
+}
+
+.avatar-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.avatar-display:hover .avatar-overlay {
+  opacity: 1;
+}
+
+.avatar-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-sm {
+  padding: 0.4rem 1rem;
+  font-size: 0.85rem;
+}
+
+/* ============================================
    SECTIONS
    ============================================ */
 

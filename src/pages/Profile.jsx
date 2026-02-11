@@ -6,7 +6,7 @@
  * profile info and password change - so they're clearly separate.
  */
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { userAPI } from '../services/api';
 import './Profile.css';
@@ -27,6 +27,12 @@ function Profile() {
     newPassword: '',
     confirmPassword: '',
   });
+
+  // Avatar state - tracks the selected file and preview before uploading
+  const [avatarFile, setAvatarFile] = useState(null);
+  const [avatarPreview, setAvatarPreview] = useState(null);
+  const [avatarUploading, setAvatarUploading] = useState(false);
+  const fileInputRef = useRef(null);
 
   // UI state
   const [profileSaving, setProfileSaving] = useState(false);
@@ -50,6 +56,54 @@ function Profile() {
   const showToast = (message, type = 'success') => {
     setToast({ message, type });
     setTimeout(() => setToast(null), 3000);
+  };
+
+  // When the user picks a file, show a preview right away
+  // I'm using URL.createObjectURL so we don't have to upload just to show a preview
+  const handleAvatarSelect = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Basic validation before we even try to upload
+    if (!file.type.startsWith('image/')) {
+      showToast('Please select an image file', 'error');
+      return;
+    }
+
+    if (file.size > 2 * 1024 * 1024) {
+      showToast('Image must be under 2MB', 'error');
+      return;
+    }
+
+    setAvatarFile(file);
+    setAvatarPreview(URL.createObjectURL(file));
+  };
+
+  // Upload the selected avatar to Cloudinary through our API
+  const handleAvatarUpload = async () => {
+    if (!avatarFile) return;
+
+    setAvatarUploading(true);
+    try {
+      const response = await userAPI.uploadAvatar(avatarFile);
+      // Update global auth state so the Navbar avatar updates too
+      updateUser(response.data.data);
+      setAvatarFile(null);
+      setAvatarPreview(null);
+      showToast('Avatar updated!');
+    } catch (err) {
+      console.error('Error uploading avatar:', err);
+      showToast(err.response?.data?.message || 'Failed to upload avatar', 'error');
+    } finally {
+      setAvatarUploading(false);
+    }
+  };
+
+  // Cancel the avatar selection and clear the preview
+  const cancelAvatarSelect = () => {
+    setAvatarFile(null);
+    setAvatarPreview(null);
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   // Handle profile field changes
@@ -144,6 +198,52 @@ function Profile() {
         <h1>Profile Settings</h1>
         <p>Manage your account information</p>
       </div>
+
+      {/* Avatar section */}
+      <section className="profile-section avatar-section">
+        <h2>Profile Photo</h2>
+        <div className="avatar-container">
+          <div className="avatar-display" onClick={() => fileInputRef.current?.click()}>
+            {avatarPreview || user?.avatar ? (
+              <img src={avatarPreview || user?.avatar} alt="Avatar" />
+            ) : (
+              <span className="avatar-fallback">
+                {user?.username?.charAt(0).toUpperCase()}
+              </span>
+            )}
+            <div className="avatar-overlay">Change</div>
+          </div>
+
+          {/* Hidden file input - triggered by clicking the avatar */}
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleAvatarSelect}
+            accept="image/jpeg,image/png,image/webp"
+            hidden
+          />
+
+          {/* Show upload/cancel buttons only when a new file is selected */}
+          {avatarFile && (
+            <div className="avatar-actions">
+              <button
+                className="btn btn-primary btn-sm"
+                onClick={handleAvatarUpload}
+                disabled={avatarUploading}
+              >
+                {avatarUploading ? 'Uploading...' : 'Upload'}
+              </button>
+              <button
+                className="btn btn-secondary btn-sm"
+                onClick={cancelAvatarSelect}
+                disabled={avatarUploading}
+              >
+                Cancel
+              </button>
+            </div>
+          )}
+        </div>
+      </section>
 
       {/* Profile info section */}
       <section className="profile-section">

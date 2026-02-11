@@ -91,6 +91,17 @@ export const userAPI = {
   updateProfile: (userData) => api.put('/users/me', userData),
   updatePassword: (passwords) => api.put('/users/me/password', passwords),
   getUserListings: (userId) => api.get(`/users/${userId}/listings`),
+
+  // Avatar upload needs FormData instead of JSON
+  // I had to override the Content-Type header so the browser sets
+  // the correct multipart boundary automatically
+  uploadAvatar: (file) => {
+    const formData = new FormData();
+    formData.append('avatar', file);
+    return api.put('/users/me/avatar', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+  },
 };
 
 // ============================================
