@@ -8,11 +8,13 @@
 
 import { useState, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 import { userAPI } from '../services/api';
 import './Profile.css';
 
 function Profile() {
   const { user, updateUser } = useAuth();
+  const { showToast } = useToast();
 
   // Profile form state - pre-fill with current user data
   const [profileData, setProfileData] = useState({
@@ -37,7 +39,6 @@ function Profile() {
   // UI state
   const [profileSaving, setProfileSaving] = useState(false);
   const [passwordSaving, setPasswordSaving] = useState(false);
-  const [toast, setToast] = useState(null);
   const [profileError, setProfileError] = useState(null);
   const [passwordError, setPasswordError] = useState(null);
 
@@ -51,12 +52,6 @@ function Profile() {
     { id: 'digimon', name: 'Digimon' },
     { id: 'union-arena', name: 'Union Arena' },
   ];
-
-  // Show a temporary toast
-  const showToast = (message, type = 'success') => {
-    setToast({ message, type });
-    setTimeout(() => setToast(null), 3000);
-  };
 
   // When the user picks a file, show a preview right away
   // I'm using URL.createObjectURL so we don't have to upload just to show a preview
@@ -189,11 +184,6 @@ function Profile() {
 
   return (
     <div className="profile-page">
-      {/* Toast notification */}
-      {toast && (
-        <div className={`toast ${toast.type}`}>{toast.message}</div>
-      )}
-
       <div className="profile-header">
         <h1>Profile Settings</h1>
         <p>Manage your account information</p>
@@ -315,55 +305,57 @@ function Profile() {
         </form>
       </section>
 
-      {/* Password section */}
-      <section className="profile-section">
-        <h2>Change Password</h2>
+      {/* Password section - only show for local auth users (not social login) */}
+      {(!user?.authProvider || user.authProvider === 'local') && (
+        <section className="profile-section">
+          <h2>Change Password</h2>
 
-        {passwordError && <div className="error-box">{passwordError}</div>}
+          {passwordError && <div className="error-box">{passwordError}</div>}
 
-        <form onSubmit={handlePasswordSave}>
-          <div className="form-group">
-            <label htmlFor="currentPassword">Current Password</label>
-            <input
-              type="password"
-              id="currentPassword"
-              name="currentPassword"
-              value={passwordData.currentPassword}
-              onChange={handlePasswordChange}
-              required
-            />
-          </div>
+          <form onSubmit={handlePasswordSave}>
+            <div className="form-group">
+              <label htmlFor="currentPassword">Current Password</label>
+              <input
+                type="password"
+                id="currentPassword"
+                name="currentPassword"
+                value={passwordData.currentPassword}
+                onChange={handlePasswordChange}
+                required
+              />
+            </div>
 
-          <div className="form-group">
-            <label htmlFor="newPassword">New Password</label>
-            <input
-              type="password"
-              id="newPassword"
-              name="newPassword"
-              value={passwordData.newPassword}
-              onChange={handlePasswordChange}
-              minLength="6"
-              required
-            />
-          </div>
+            <div className="form-group">
+              <label htmlFor="newPassword">New Password</label>
+              <input
+                type="password"
+                id="newPassword"
+                name="newPassword"
+                value={passwordData.newPassword}
+                onChange={handlePasswordChange}
+                minLength="6"
+                required
+              />
+            </div>
 
-          <div className="form-group">
-            <label htmlFor="confirmPassword">Confirm New Password</label>
-            <input
-              type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-              value={passwordData.confirmPassword}
-              onChange={handlePasswordChange}
-              required
-            />
-          </div>
+            <div className="form-group">
+              <label htmlFor="confirmPassword">Confirm New Password</label>
+              <input
+                type="password"
+                id="confirmPassword"
+                name="confirmPassword"
+                value={passwordData.confirmPassword}
+                onChange={handlePasswordChange}
+                required
+              />
+            </div>
 
-          <button type="submit" className="btn btn-secondary" disabled={passwordSaving}>
-            {passwordSaving ? 'Updating...' : 'Update Password'}
-          </button>
-        </form>
-      </section>
+            <button type="submit" className="btn btn-secondary" disabled={passwordSaving}>
+              {passwordSaving ? 'Updating...' : 'Update Password'}
+            </button>
+          </form>
+        </section>
+      )}
     </div>
   );
 }

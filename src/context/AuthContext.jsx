@@ -133,6 +133,29 @@ export function AuthProvider({ children }) {
   };
 
   /**
+   * Social login - exchange an Auth0 access token for our app JWT
+   * This gets called by the AuthCallback page after the redirect
+   */
+  const socialLogin = async (accessToken) => {
+    try {
+      setError(null);
+      const response = await authAPI.socialLogin(accessToken);
+
+      // Store token and user the same way as email/password login
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('user', JSON.stringify(response.data.data));
+
+      setUser(response.data.data);
+
+      return { success: true };
+    } catch (err) {
+      const message = err.response?.data?.message || 'Social login failed';
+      setError(message);
+      return { success: false, error: message };
+    }
+  };
+
+  /**
    * Clear any error messages
    */
   const clearError = () => {
@@ -147,6 +170,7 @@ export function AuthProvider({ children }) {
     isAuthenticated: !!user,
     register,
     login,
+    socialLogin,
     logout,
     updateUser,
     clearError,

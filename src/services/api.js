@@ -80,6 +80,8 @@ export const authAPI = {
   login: (credentials) => api.post('/auth/login', credentials),
   logout: () => api.post('/auth/logout'),
   getMe: () => api.get('/auth/me'),
+  // Exchange Auth0 access token for our app JWT
+  socialLogin: (accessToken) => api.post('/auth/social', { accessToken }),
 };
 
 // ============================================

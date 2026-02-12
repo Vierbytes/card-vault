@@ -9,7 +9,9 @@
  */
 
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Auth0Provider } from '@auth0/auth0-react';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { ToastProvider } from './context/ToastContext';
 
 // Layout components
 import Navbar from './components/Navbar';
@@ -30,6 +32,7 @@ import ListingDetails from './pages/ListingDetails';
 import Profile from './pages/Profile';
 import Matches from './pages/Matches';
 import Scanner from './pages/Scanner';
+import AuthCallback from './pages/AuthCallback';
 // Styles
 import './App.css';
 
@@ -79,14 +82,24 @@ function AppLayout({ children }) {
  */
 function App() {
   return (
-    <AuthProvider>
-      <Router>
+    <Router>
+      <Auth0Provider
+        domain={import.meta.env.VITE_AUTH0_DOMAIN}
+        clientId={import.meta.env.VITE_AUTH0_CLIENT_ID}
+        authorizationParams={{
+          redirect_uri: window.location.origin + '/callback',
+          audience: import.meta.env.VITE_AUTH0_AUDIENCE,
+        }}
+      >
+      <AuthProvider>
+        <ToastProvider>
         <AppLayout>
           <Routes>
             {/* Public routes - anyone can access these */}
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/callback" element={<AuthCallback />} />
             <Route path="/marketplace" element={<Marketplace />} />
             <Route path="/cards" element={<BrowseCards />} />
             <Route path="/cards/:id" element={<CardDetails />} />
@@ -155,8 +168,10 @@ function App() {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AppLayout>
-      </Router>
-    </AuthProvider>
+        </ToastProvider>
+      </AuthProvider>
+      </Auth0Provider>
+    </Router>
   );
 }
 

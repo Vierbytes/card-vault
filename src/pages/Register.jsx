@@ -6,14 +6,28 @@
 
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth0 } from '@auth0/auth0-react';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 import { GiCardPick } from 'react-icons/gi';
 import { FiAlertTriangle } from 'react-icons/fi';
+import { FcGoogle } from 'react-icons/fc';
 import './Auth.css';
 
 function Register() {
   const navigate = useNavigate();
   const { register, error, clearError } = useAuth();
+  const { showToast } = useToast();
+  const { loginWithRedirect } = useAuth0();
+
+  // Social login - same flow as login page, Auth0 auto-creates accounts
+  const handleSocialLogin = (connection) => {
+    loginWithRedirect({
+      authorizationParams: {
+        connection,
+      },
+    });
+  };
 
   // Form state
   const [formData, setFormData] = useState({
@@ -68,6 +82,7 @@ function Register() {
     const result = await register(formData.username, formData.email, formData.password);
 
     if (result.success) {
+      showToast('Account created!');
       navigate('/dashboard');
     } else {
       setFormError(result.error);
@@ -158,6 +173,22 @@ function Register() {
             {loading ? 'Creating account...' : 'Create Account'}
           </button>
         </form>
+
+        {/* Divider between form and social login */}
+        <div className="auth-divider">
+          <span>or sign up with</span>
+        </div>
+
+        {/* Social login buttons - same flow, Auth0 auto-creates accounts */}
+        <div className="social-buttons">
+          <button
+            type="button"
+            className="btn btn-social btn-google"
+            onClick={() => handleSocialLogin('google-oauth2')}
+          >
+            <FcGoogle /> Google
+          </button>
+        </div>
 
         {/* Footer */}
         <div className="auth-footer">
