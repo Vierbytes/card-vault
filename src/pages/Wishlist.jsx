@@ -15,12 +15,14 @@ import { wishlistAPI } from '../services/api';
 import { FiHeart } from 'react-icons/fi';
 import { GiCardPick } from 'react-icons/gi';
 import useCardTilt from '../hooks/useCardTilt';
+import { useToast } from '../context/ToastContext';
 import Loader from '../components/Loader';
 import './Wishlist.css';
 
 function Wishlist() {
   // 3D tilt effect handlers for card hover
   const tiltHandlers = useCardTilt();
+  const { showToast } = useToast();
 
   // Wishlist data
   const [items, setItems] = useState([]);
@@ -30,9 +32,6 @@ function Wishlist() {
   // For editing max price
   const [editingId, setEditingId] = useState(null);
   const [editMaxPrice, setEditMaxPrice] = useState('');
-
-  // Toast notification
-  const [toast, setToast] = useState(null);
 
   // Fetch wishlist on mount
   useEffect(() => {
@@ -52,12 +51,6 @@ function Wishlist() {
     } finally {
       setLoading(false);
     }
-  };
-
-  // Show a temporary toast message
-  const showToast = (message, type = 'success') => {
-    setToast({ message, type });
-    setTimeout(() => setToast(null), 3000);
   };
 
   // Update item's max price (what user is willing to pay)
@@ -97,11 +90,6 @@ function Wishlist() {
 
   return (
     <div className="wishlist-page">
-      {/* Toast notification */}
-      {toast && (
-        <div className={`toast ${toast.type}`}>{toast.message}</div>
-      )}
-
       {/* Header */}
       <div className="wishlist-header">
         <div className="header-text">

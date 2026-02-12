@@ -15,12 +15,14 @@ import { collectionAPI } from '../services/api';
 import { FiPackage } from 'react-icons/fi';
 import { GiCardPick } from 'react-icons/gi';
 import useCardTilt from '../hooks/useCardTilt';
+import { useToast } from '../context/ToastContext';
 import Loader from '../components/Loader';
 import './Collection.css';
 
 function Collection() {
   // 3D tilt effect handlers for card hover
   const tiltHandlers = useCardTilt();
+  const { showToast } = useToast();
 
   // Collection data
   const [items, setItems] = useState([]);
@@ -34,9 +36,6 @@ function Collection() {
   // For editing quantity
   const [editingId, setEditingId] = useState(null);
   const [editQuantity, setEditQuantity] = useState(1);
-
-  // Toast notification for actions
-  const [toast, setToast] = useState(null);
 
   // Fetch collection on mount
   useEffect(() => {
@@ -68,12 +67,6 @@ function Collection() {
     } finally {
       setLoading(false);
     }
-  };
-
-  // Show a temporary toast message
-  const showToast = (message, type = 'success') => {
-    setToast({ message, type });
-    setTimeout(() => setToast(null), 3000);
   };
 
   // Update item quantity
@@ -126,11 +119,6 @@ function Collection() {
 
   return (
     <div className="collection-page">
-      {/* Toast notification */}
-      {toast && (
-        <div className={`toast ${toast.type}`}>{toast.message}</div>
-      )}
-
       {/* Header with stats */}
       <div className="collection-header">
         <div className="header-text">

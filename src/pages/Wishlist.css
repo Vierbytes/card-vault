@@ -214,43 +214,6 @@
 }
 
 /* ============================================
-   TOAST NOTIFICATION
-   ============================================ */
-
-.wishlist-page .toast {
-  position: fixed;
-  top: 80px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 0.75rem 1.5rem;
-  border-radius: var(--radius-md);
-  font-weight: 600;
-  z-index: 1000;
-  animation: slideDown 0.3s ease;
-}
-
-.wishlist-page .toast.success {
-  background: var(--color-success);
-  color: white;
-}
-
-.wishlist-page .toast.error {
-  background: var(--color-danger);
-  color: white;
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateX(-50%) translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
-}
-
-/* ============================================
    EMPTY / ERROR STATES
    ============================================ */
 

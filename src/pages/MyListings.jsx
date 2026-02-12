@@ -13,6 +13,7 @@ import { Link } from 'react-router-dom';
 import { listingAPI } from '../services/api';
 import { FiTag } from 'react-icons/fi';
 import { GiCardPick } from 'react-icons/gi';
+import { useToast } from '../context/ToastContext';
 import Loader from '../components/Loader';
 import './MyListings.css';
 
@@ -24,9 +25,7 @@ function MyListings() {
 
   // Filter by status
   const [activeTab, setActiveTab] = useState('active');
-
-  // Toast notification
-  const [toast, setToast] = useState(null);
+  const { showToast } = useToast();
 
   // Fetch listings when tab changes
   useEffect(() => {
@@ -47,12 +46,6 @@ function MyListings() {
     } finally {
       setLoading(false);
     }
-  };
-
-  // Show a temporary toast message
-  const showToast = (message, type = 'success') => {
-    setToast({ message, type });
-    setTimeout(() => setToast(null), 3000);
   };
 
   // Format condition for display
@@ -99,11 +92,6 @@ function MyListings() {
 
   return (
     <div className="my-listings-page">
-      {/* Toast */}
-      {toast && (
-        <div className={`toast ${toast.type}`}>{toast.message}</div>
-      )}
-
       {/* Header */}
       <div className="listings-header">
         <div className="header-text">

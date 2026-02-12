@@ -14,6 +14,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { cardAPI, collectionAPI, wishlistAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 import PriceChart from '../components/PriceChart';
 import Loader from '../components/Loader';
 import './CardDetails.css';
@@ -56,12 +57,12 @@ function extractPokemonName(cardName) {
 function CardDetails() {
   const { id } = useParams();
   const { isAuthenticated } = useAuth();
+  const { showToast } = useToast();
 
   // State
   const [card, setCard] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [actionMessage, setActionMessage] = useState(null);
 
   // Animated sprite from PokeAPI
   const [spriteData, setSpriteData] = useState(null);
@@ -143,12 +144,6 @@ function CardDetails() {
     fetchSprite();
   }, [card?.name]);
 
-  // Show a toast notification that disappears after 3 seconds
-  const showToast = (text, type = 'success') => {
-    setActionMessage({ type, text });
-    setTimeout(() => setActionMessage(null), 3000);
-  };
-
   // Add to collection - sends the card data so the backend can create
   // a Card document if it doesn't exist yet in our local DB
   const handleAddToCollection = async () => {
@@ -218,11 +213,6 @@ function CardDetails() {
 
   return (
     <div className="card-details-page">
-      {/* Action message toast */}
-      {actionMessage && (
-        <div className={`action-toast ${actionMessage.type}`}>{actionMessage.text}</div>
-      )}
-
       <div className="card-details-content">
         {/* Left column - Card image */}
         <div className="card-image-section">

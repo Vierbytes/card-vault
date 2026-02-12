@@ -9,6 +9,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 import { listingAPI } from '../services/api';
 import { GiCardPick } from 'react-icons/gi';
 import './ListingDetails.css';
@@ -16,13 +17,13 @@ import './ListingDetails.css';
 function ListingDetails() {
   const { id } = useParams();
   const { user } = useAuth();
+  const { showToast } = useToast();
   const navigate = useNavigate();
 
   // Listing data
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [toast, setToast] = useState(null);
 
   // Fetch listing
   useEffect(() => {
@@ -41,12 +42,6 @@ function ListingDetails() {
 
     fetchListing();
   }, [id]);
-
-  // Show toast
-  const showToast = (message, type = 'success') => {
-    setToast({ message, type });
-    setTimeout(() => setToast(null), 3000);
-  };
 
   // Format condition
   const formatCondition = (condition) => {
@@ -115,11 +110,6 @@ function ListingDetails() {
 
   return (
     <div className="listing-details-page">
-      {/* Toast */}
-      {toast && (
-        <div className={`toast ${toast.type}`}>{toast.message}</div>
-      )}
-
       <div className="listing-layout">
         {/* Card image */}
         <div className="listing-image-section">

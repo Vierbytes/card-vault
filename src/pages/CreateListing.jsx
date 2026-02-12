@@ -10,12 +10,14 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { cardAPI, listingAPI } from '../services/api';
+import { useToast } from '../context/ToastContext';
 import { GiCardPick } from 'react-icons/gi';
 import useCardTilt from '../hooks/useCardTilt';
 import './CreateListing.css';
 
 function CreateListing() {
   const navigate = useNavigate();
+  const { showToast } = useToast();
 
   // 3D tilt effect handlers for card hover
   const tiltHandlers = useCardTilt();
@@ -98,6 +100,7 @@ function CreateListing() {
       };
 
       await listingAPI.create(listingData);
+      showToast('Listing created!');
       // Redirect to my listings page after success
       navigate('/listings/mine');
     } catch (err) {
