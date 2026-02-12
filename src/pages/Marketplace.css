@@ -123,6 +123,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 1.5rem;
+  perspective: 1500px;
 }
 
 /* Listing card */
@@ -135,12 +136,6 @@
   overflow: hidden;
   text-decoration: none;
   color: var(--color-text);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.listing-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
 }
 
 .listing-image {

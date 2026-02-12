@@ -1,0 +1,269 @@
+/**
+ * Card Tilt Effect
+ *
+ * A 3D hover effect inspired by uiverse.io that adds a rotating
+ * glow border, 3D tilt, and light/shadow overlay when you hover over cards.
+ *
+ * How it works:
+ * - The useCardTilt hook tracks mouse position and applies rotateX/rotateY
+ *   transforms via inline styles, so cards tilt toward the cursor
+ * - ::before creates a rotating blurred glow behind the card edges
+ * - ::after sits on top of the glow as the card's background
+ * - .light-shadow adds an inset light reflection on hover
+ * - The grid container uses perspective for the 3D depth feel
+ *
+ * I found that using the primary color (#6366f1) for the glow
+ * ties the effect into the overall app theme really nicely.
+ */
+
+/* ============================================
+   KEYFRAMES
+   ============================================ */
+
+@keyframes card-glow-rotate {
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+/* ============================================
+   CARD TILT BASE
+   The .card-tilt class goes on any card element
+   that should have the hover effect.
+   ============================================ */
+
+.card-tilt {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: visible !important;
+  transition:
+    transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.25),
+    box-shadow 0.4s ease;
+}
+
+/* Rotating glow - hidden by default, fades in on hover */
+.card-tilt::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100px;
+  height: 400px;
+  background-color: var(--color-primary, #6366f1);
+  filter: blur(50px);
+  opacity: 0;
+  z-index: -1;
+  animation: card-glow-rotate 10s linear infinite;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+/* Card background overlay - sits on top of the glow, clips card content */
+.card-tilt::after {
+  content: "";
+  position: absolute;
+  inset: 1.5px;
+  background-color: var(--color-surface, #ffffff);
+  border-radius: inherit;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ============================================
+   HOVER STATE
+   Show the glow, lift the card, add shadow
+   ============================================ */
+
+.card-tilt:hover {
+  box-shadow: 0 12px 32px rgba(99, 102, 241, 0.15);
+}
+
+.card-tilt:hover::before {
+  opacity: 1;
+}
+
+/* ============================================
+   LIGHT SHADOW OVERLAY
+   This div needs to be added inside each card.
+   It creates a soft inner glow on hover.
+   ============================================ */
+
+.card-tilt .light-shadow {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  border-radius: inherit;
+  transition: box-shadow 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.card-tilt:hover .light-shadow {
+  box-shadow:
+    inset 0 0 80px rgba(255, 255, 255, 0.3),
+    inset 0 0 80px rgba(0, 0, 0, 0.1);
+}
+
+/* ============================================
+   CARD CHILDREN Z-INDEX
+   All direct children of .card-tilt need to sit
+   above the ::after overlay (z-index: 0).
+   ============================================ */
+
+.card-tilt > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ============================================
+   HOVER-REVEAL CARD INFO
+   The info/details section is hidden by default
+   and slides up from the bottom on hover. This
+   keeps all cards uniform and clean until you
+   interact with them.
+
+   Targets all the different info class names
+   used across the app's card components.
+   ============================================ */
+
+.card-tilt .card-info,
+.card-tilt .card-details,
+.card-tilt .listing-details,
+.card-tilt .result-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.85) 0%,
+    rgba(0, 0, 0, 0.6) 60%,
+    transparent 100%
+  );
+  color: #fff;
+  padding: 2.5rem 0.75rem 0.75rem;
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease;
+  pointer-events: none;
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+}
+
+.card-tilt:hover .card-info,
+.card-tilt:hover .card-details,
+.card-tilt:hover .listing-details,
+.card-tilt:hover .result-info {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* Override text colors inside the info overlay so everything
+   reads well against the dark gradient background */
+.card-tilt .card-info *,
+.card-tilt .card-details *,
+.card-tilt .listing-details *,
+.card-tilt .result-info * {
+  color: #fff;
+}
+
+/* Keep primary-colored elements like prices bright */
+.card-tilt .card-price,
+.card-tilt .listing-price,
+.card-tilt .result-price,
+.card-tilt .card-value {
+  color: #a5b4fc;
+}
+
+/* Rarity badge needs a visible background against the dark overlay */
+.card-tilt .card-rarity {
+  background: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Condition badges need contrast on the dark gradient */
+.card-tilt .listing-condition,
+.card-tilt .condition-badge {
+  background: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Buttons inside the overlay - semi-transparent bg so they pop */
+.card-tilt .card-details .btn,
+.card-tilt .listing-details .btn {
+  color: #fff;
+}
+
+.card-tilt .card-details .btn-secondary,
+.card-tilt .card-details .btn-danger {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.card-tilt .card-details .btn-danger {
+  background: rgba(239, 68, 68, 0.4);
+  border-color: rgba(239, 68, 68, 0.5);
+}
+
+/* The seller/condition border should be subtle on dark bg */
+.card-tilt .listing-seller {
+  border-top-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Collection card actions border */
+.card-tilt .card-actions {
+  border-top-color: rgba(255, 255, 255, 0.2);
+}
+
+/* ============================================
+   GRID PERSPECTIVE
+   Add this class to any grid container that holds
+   tilt cards for the 3D depth effect.
+   ============================================ */
+
+.card-tilt-grid {
+  perspective: 1500px;
+}
+
+/* ============================================
+   ACCESSIBILITY
+   Disable animations for users who prefer
+   reduced motion to avoid discomfort.
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .card-tilt::before {
+    animation: none;
+  }
+
+  .card-tilt:hover {
+    transform: none;
+  }
+
+  .card-tilt:hover .light-shadow {
+    box-shadow: none;
+  }
+
+  /* Keep card info always visible for reduced motion users */
+  .card-tilt .card-info,
+  .card-tilt .card-details,
+  .card-tilt .listing-details,
+  .card-tilt .result-info {
+    position: relative;
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+    background: none;
+    color: inherit;
+    padding: 0.75rem;
+  }
+
+  .card-tilt .card-info *,
+  .card-tilt .card-details *,
+  .card-tilt .listing-details *,
+  .card-tilt .result-info * {
+    color: inherit;
+  }
+}

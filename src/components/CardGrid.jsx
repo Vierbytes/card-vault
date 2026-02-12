@@ -6,12 +6,19 @@
  */
 
 import { Link } from 'react-router-dom';
+import { FiSearch } from 'react-icons/fi';
+import { GiCardPick } from 'react-icons/gi';
+import useCardTilt from '../hooks/useCardTilt';
+import Loader from './Loader';
 import './CardGrid.css';
 
 /**
  * CardItem - Single card display
  */
 function CardItem({ card, showPrice = true, showSeller = false, linkTo }) {
+  // 3D tilt effect handlers for card hover
+  const tiltHandlers = useCardTilt();
+
   // Determine the link destination - all cards go to the same detail page now
   const cardLink = linkTo || `/cards/${card.externalId || card.id || card._id}`;
 
@@ -34,14 +41,14 @@ function CardItem({ card, showPrice = true, showSeller = false, linkTo }) {
   };
 
   return (
-    <Link to={cardLink} className="card-item">
+    <Link to={cardLink} className="card-item card-tilt" {...tiltHandlers}>
       {/* Card image */}
       <div className="card-image-container">
         {card.imageUrl ? (
           <img src={card.imageUrl} alt={card.name} className="card-image" loading="lazy" />
         ) : (
           <div className="card-image-placeholder">
-            <span>🃏</span>
+            <GiCardPick />
           </div>
         )}
 
@@ -84,6 +91,7 @@ function CardItem({ card, showPrice = true, showSeller = false, linkTo }) {
           </div>
         )}
       </div>
+      <div className="light-shadow" />
     </Link>
   );
 }
@@ -93,24 +101,13 @@ function CardItem({ card, showPrice = true, showSeller = false, linkTo }) {
  */
 function CardGrid({ cards, loading, emptyMessage = 'No cards found', showPrice, showSeller }) {
   if (loading) {
-    return (
-      <div className="card-grid-loading">
-        {/* Skeleton loaders */}
-        {[...Array(8)].map((_, i) => (
-          <div key={i} className="card-skeleton">
-            <div className="skeleton-image"></div>
-            <div className="skeleton-text"></div>
-            <div className="skeleton-text short"></div>
-          </div>
-        ))}
-      </div>
-    );
+    return <Loader message="Loading cards..." />;
   }
 
   if (!cards || cards.length === 0) {
     return (
       <div className="card-grid-empty">
-        <span className="empty-icon">🔍</span>
+        <FiSearch className="empty-icon" />
         <p>{emptyMessage}</p>
       </div>
     );

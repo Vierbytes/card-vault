@@ -12,9 +12,16 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { wishlistAPI } from '../services/api';
+import { FiHeart } from 'react-icons/fi';
+import { GiCardPick } from 'react-icons/gi';
+import useCardTilt from '../hooks/useCardTilt';
+import Loader from '../components/Loader';
 import './Wishlist.css';
 
 function Wishlist() {
+  // 3D tilt effect handlers for card hover
+  const tiltHandlers = useCardTilt();
+
   // Wishlist data
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -99,7 +106,7 @@ function Wishlist() {
       <div className="wishlist-header">
         <div className="header-text">
           <h1>My Wishlist</h1>
-          <p>Cards you're looking for — we'll match you with sellers</p>
+          <p>Cards you're looking for... We'll match you with sellers</p>
         </div>
         <div className="wishlist-count">
           <span className="count-number">{items.length}</span>
@@ -109,17 +116,7 @@ function Wishlist() {
 
       {/* Wishlist content */}
       {loading ? (
-        <div className="wishlist-grid">
-          {[...Array(6)].map((_, i) => (
-            <div key={i} className="wishlist-skeleton">
-              <div className="skeleton-image"></div>
-              <div className="skeleton-content">
-                <div className="skeleton-text"></div>
-                <div className="skeleton-text short"></div>
-              </div>
-            </div>
-          ))}
-        </div>
+        <Loader message="Loading your wishlist..." />
       ) : error ? (
         <div className="wishlist-error">
           <p>{error}</p>
@@ -129,7 +126,7 @@ function Wishlist() {
         </div>
       ) : items.length === 0 ? (
         <div className="wishlist-empty">
-          <span className="empty-icon">♡</span>
+          <FiHeart className="empty-icon" />
           <h3>Your wishlist is empty</h3>
           <p>Browse cards and add ones you want to your wishlist.</p>
           <Link to="/cards" className="btn btn-primary">
@@ -139,13 +136,13 @@ function Wishlist() {
       ) : (
         <div className="wishlist-grid">
           {items.map((item) => (
-            <div key={item._id} className="wishlist-card">
+            <div key={item._id} className="wishlist-card card-tilt" {...tiltHandlers}>
               <Link to={`/cards/${item.card?.externalId || item.card?._id}`} className="card-link">
                 <div className="card-image">
                   {item.card?.imageUrl ? (
                     <img src={item.card.imageUrl} alt={item.card.name} />
                   ) : (
-                    <span className="card-placeholder">🃏</span>
+                    <GiCardPick className="card-placeholder" />
                   )}
                   {item.card?.game && (
                     <span className="game-badge">{item.card.game}</span>
@@ -158,12 +155,14 @@ function Wishlist() {
                 <p className="card-set">{item.card?.setName}</p>
 
                 <div className="card-pricing">
-                  {item.card?.price && (
-                    <div className="market-price">
-                      <span className="price-label">Market:</span>
-                      <span className="price-value">${parseFloat(item.card.price).toFixed(2)}</span>
-                    </div>
-                  )}
+                  <div className="market-price">
+                    <span className="price-label">Market:</span>
+                    <span className="price-value">
+                      {item.card?.price
+                        ? `$${parseFloat(item.card.price).toFixed(2)}`
+                        : 'N/A'}
+                    </span>
+                  </div>
                   {item.maxPrice > 0 && (
                     <div className="max-price">
                       <span className="price-label">Max:</span>
@@ -218,6 +217,7 @@ function Wishlist() {
                   )}
                 </div>
               </div>
+              <div className="light-shadow" />
             </div>
           ))}
         </div>

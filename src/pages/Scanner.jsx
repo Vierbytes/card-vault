@@ -15,9 +15,15 @@
 import { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { cardAPI } from '../services/api';
+import { FiCamera, FiUpload } from 'react-icons/fi';
+import { GiCardPick } from 'react-icons/gi';
+import useCardTilt from '../hooks/useCardTilt';
 import './Scanner.css';
 
 function Scanner() {
+  // 3D tilt effect handlers for card hover
+  const tiltHandlers = useCardTilt();
+
   // Camera and image state
   const [imagePreview, setImagePreview] = useState(null);
   const [isCapturing, setIsCapturing] = useState(false);
@@ -181,7 +187,7 @@ function Scanner() {
       {!imagePreview && !isCapturing && (
         <div className="scanner-options">
           <button className="scanner-option" onClick={startCamera}>
-            <span className="option-icon">📷</span>
+            <FiCamera className="option-icon" />
             <span className="option-title">Take a Photo</span>
             <span className="option-desc">Use your camera to scan a card</span>
           </button>
@@ -190,7 +196,7 @@ function Scanner() {
             className="scanner-option"
             onClick={() => fileInputRef.current?.click()}
           >
-            <span className="option-icon">📁</span>
+            <FiUpload className="option-icon" />
             <span className="option-title">Upload Image</span>
             <span className="option-desc">Choose an image from your device</span>
           </button>
@@ -280,24 +286,26 @@ function Scanner() {
                 <Link
                   key={card.id || card._id}
                   to={`/cards/${card.id || card._id}`}
-                  className="result-card"
+                  className="result-card card-tilt"
+                  {...tiltHandlers}
                 >
                   <div className="result-image">
                     {card.imageUrl || card.image ? (
                       <img src={card.imageUrl || card.image} alt={card.name} />
                     ) : (
-                      <span className="result-placeholder">🃏</span>
+                      <GiCardPick className="result-placeholder" />
                     )}
                   </div>
                   <div className="result-info">
                     <span className="result-name">{card.name}</span>
                     <span className="result-set">{card.setName || card.set}</span>
-                    {card.price && (
-                      <span className="result-price">
-                        ${parseFloat(card.price).toFixed(2)}
-                      </span>
-                    )}
+                    <span className="result-price">
+                      {card.price
+                        ? `$${parseFloat(card.price).toFixed(2)}`
+                        : 'N/A'}
+                    </span>
                   </div>
+                  <div className="light-shadow" />
                 </Link>
               ))}
             </div>

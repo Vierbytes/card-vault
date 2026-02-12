@@ -8,9 +8,16 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { listingAPI, cardAPI } from '../services/api';
+import { FiSearch } from 'react-icons/fi';
+import { GiCardPick } from 'react-icons/gi';
+import useCardTilt from '../hooks/useCardTilt';
+import Loader from '../components/Loader';
 import './Marketplace.css';
 
 function Marketplace() {
+  // 3D tilt effect handlers for card hover
+  const tiltHandlers = useCardTilt();
+
   // State for listings and loading
   const [listings, setListings] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -190,17 +197,7 @@ function Marketplace() {
         {/* Listings grid */}
         <main className="listings-main">
           {loading ? (
-            <div className="listings-loading">
-              {[...Array(8)].map((_, i) => (
-                <div key={i} className="listing-skeleton">
-                  <div className="skeleton-image"></div>
-                  <div className="skeleton-content">
-                    <div className="skeleton-text"></div>
-                    <div className="skeleton-text short"></div>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <Loader message="Loading listings..." />
           ) : error ? (
             <div className="listings-error">
               <p>{error}</p>
@@ -210,7 +207,7 @@ function Marketplace() {
             </div>
           ) : listings.length === 0 ? (
             <div className="listings-empty">
-              <span className="empty-icon">🔍</span>
+              <FiSearch className="empty-icon" />
               <h3>No listings found</h3>
               <p>Try adjusting your filters or check back later.</p>
             </div>
@@ -221,13 +218,14 @@ function Marketplace() {
                   <Link
                     key={listing._id}
                     to={`/listings/${listing._id}`}
-                    className="listing-card"
+                    className="listing-card card-tilt"
+                    {...tiltHandlers}
                   >
                     <div className="listing-image">
                       {listing.card?.imageUrl ? (
                         <img src={listing.card.imageUrl} alt={listing.card.name} />
                       ) : (
-                        <span className="placeholder">🃏</span>
+                        <GiCardPick className="placeholder" />
                       )}
                       {listing.card?.game && (
                         <span className="game-badge">{listing.card.game}</span>
@@ -237,7 +235,9 @@ function Marketplace() {
                       <h3 className="listing-name">{listing.card?.name || 'Unknown Card'}</h3>
                       <p className="listing-set">{listing.card?.setName}</p>
                       <div className="listing-meta">
-                        <span className="listing-price">${listing.price?.toFixed(2)}</span>
+                        <span className="listing-price">
+                          {listing.price ? `$${listing.price.toFixed(2)}` : 'N/A'}
+                        </span>
                         <span className="listing-condition">
                           {formatCondition(listing.condition)}
                         </span>
@@ -249,6 +249,7 @@ function Marketplace() {
                         <span className="seller-name">{listing.seller?.username}</span>
                       </div>
                     </div>
+                    <div className="light-shadow" />
                   </Link>
                 ))}
               </div>

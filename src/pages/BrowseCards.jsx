@@ -12,9 +12,14 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { cardAPI } from '../services/api';
+import useCardTilt from '../hooks/useCardTilt';
+import Loader from '../components/Loader';
 import './BrowseCards.css';
 
 function BrowseCards() {
+  // 3D tilt effect handlers for card hover
+  const tiltHandlers = useCardTilt();
+
   // Search state
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -25,6 +30,7 @@ function BrowseCards() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [hasSearched, setHasSearched] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
 
   // Load some random Pokemon cards on mount so the page isn't empty
   useEffect(() => {
@@ -43,32 +49,38 @@ function BrowseCards() {
     loadFeatured();
   }, []);
 
-  // Search for cards via TCGdex
-  const searchCards = async () => {
-    if (!searchQuery.trim()) return;
+  // Live search - debounce API calls so we don't fire on every keystroke
+  // Waits 300ms after the user stops typing before searching
+  useEffect(() => {
+    // Don't search if query is too short
+    if (searchQuery.trim().length < 2) return;
 
-    setLoading(true);
-    setError(null);
-    setHasSearched(true);
+    const timer = setTimeout(async () => {
+      setLoading(true);
+      setError(null);
+      setHasSearched(true);
 
-    try {
-      const response = await cardAPI.search({
-        q: searchQuery.trim(),
-        limit: 20,
-      });
-      setCards(response.data.data || []);
-    } catch (err) {
-      console.error('Error searching cards:', err);
-      setError('Failed to search cards. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
+      try {
+        const response = await cardAPI.search({
+          q: searchQuery.trim(),
+          limit: 20,
+        });
+        setCards(response.data.data || []);
+      } catch (err) {
+        console.error('Error searching cards:', err);
+        setError('Failed to search cards. Please try again.');
+      } finally {
+        setLoading(false);
+      }
+    }, 300);
 
-  // Handle form submission
+    // Cleanup: cancel the timer if the user keeps typing
+    return () => clearTimeout(timer);
+  }, [searchQuery, retryCount]);
+
+  // Handle form submission (still works for pressing Enter)
   const handleSearch = (e) => {
     e.preventDefault();
-    searchCards();
   };
 
   return (
@@ -89,8 +101,8 @@ function BrowseCards() {
             placeholder="Search Pokemon cards by name..."
             className="search-input"
           />
-          <button type="submit" className="btn btn-primary search-btn" disabled={loading}>
-            {loading ? 'Searching...' : 'Search'}
+          <button type="submit" className="btn btn-primary search-btn">
+            Search
           </button>
         </div>
       </form>
@@ -98,21 +110,11 @@ function BrowseCards() {
       {/* Results */}
       <div className="browse-results">
         {loading ? (
-          <div className="cards-grid">
-            {[...Array(12)].map((_, i) => (
-              <div key={i} className="card-skeleton">
-                <div className="skeleton-image"></div>
-                <div className="skeleton-content">
-                  <div className="skeleton-text"></div>
-                  <div className="skeleton-text short"></div>
-                </div>
-              </div>
-            ))}
-          </div>
+          <Loader message="Loading cards..." />
         ) : error ? (
           <div className="browse-error">
             <p>{error}</p>
-            <button className="btn btn-primary" onClick={() => searchCards()}>
+            <button className="btn btn-primary" onClick={() => setRetryCount((c) => c + 1)}>
               Try Again
             </button>
           </div>
@@ -122,7 +124,8 @@ function BrowseCards() {
               <Link
                 key={card.id}
                 to={`/cards/${card.id}`}
-                className="card-item"
+                className="card-item card-tilt"
+                {...tiltHandlers}
               >
                 <div className="card-image">
                   {card.imageUrl ? (
@@ -135,12 +138,13 @@ function BrowseCards() {
                   <h3 className="card-name">{card.name}</h3>
                   <p className="card-set">{card.setName}</p>
                   {card.rarity && <span className="card-rarity">{card.rarity}</span>}
-                  {card.currentPrice ? (
-                    <span className="card-price">
-                      ${parseFloat(card.currentPrice).toFixed(2)}
-                    </span>
-                  ) : null}
+                  <span className="card-price">
+                    {card.currentPrice
+                      ? `$${parseFloat(card.currentPrice).toFixed(2)}`
+                      : 'N/A'}
+                  </span>
                 </div>
+                <div className="light-shadow" />
               </Link>
             ))}
           </div>

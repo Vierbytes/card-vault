@@ -10,10 +10,15 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { cardAPI, listingAPI } from '../services/api';
+import { GiCardPick } from 'react-icons/gi';
+import useCardTilt from '../hooks/useCardTilt';
 import './CreateListing.css';
 
 function CreateListing() {
   const navigate = useNavigate();
+
+  // 3D tilt effect handlers for card hover
+  const tiltHandlers = useCardTilt();
 
   // Step tracking - step 1: search card, step 2: set details
   const [step, setStep] = useState(1);
@@ -148,23 +153,27 @@ function CreateListing() {
                 {searchResults.map((card) => (
                   <button
                     key={card.id || card._id}
-                    className="result-card"
+                    className="result-card card-tilt"
                     onClick={() => selectCard(card)}
+                    {...tiltHandlers}
                   >
                     <div className="result-image">
                       {card.imageUrl || card.image ? (
                         <img src={card.imageUrl || card.image} alt={card.name} />
                       ) : (
-                        <span className="result-placeholder">🃏</span>
+                        <GiCardPick className="result-placeholder" />
                       )}
                     </div>
                     <div className="result-info">
                       <span className="result-name">{card.name}</span>
                       <span className="result-set">{card.setName || card.set}</span>
-                      {card.price && (
-                        <span className="result-price">${parseFloat(card.price).toFixed(2)}</span>
-                      )}
+                      <span className="result-price">
+                        {card.price
+                          ? `$${parseFloat(card.price).toFixed(2)}`
+                          : 'N/A'}
+                      </span>
                     </div>
+                    <div className="light-shadow" />
                   </button>
                 ))}
               </div>
@@ -183,7 +192,7 @@ function CreateListing() {
                 {selectedCard.imageUrl || selectedCard.image ? (
                   <img src={selectedCard.imageUrl || selectedCard.image} alt={selectedCard.name} />
                 ) : (
-                  <span className="preview-placeholder">🃏</span>
+                  <GiCardPick className="preview-placeholder" />
                 )}
               </div>
               <h3>{selectedCard.name}</h3>

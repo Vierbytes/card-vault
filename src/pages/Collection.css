@@ -70,6 +70,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 1.25rem;
+  perspective: 1500px;
 }
 
 .collection-card {
@@ -77,11 +78,8 @@
   border-radius: var(--radius-lg);
   overflow: hidden;
   box-shadow: var(--shadow-sm);
-  transition: box-shadow 0.2s ease;
-}
-
-.collection-card:hover {
-  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
 }
 
 .card-link {
@@ -91,15 +89,18 @@
 
 .collection-card .card-image {
   position: relative;
-  aspect-ratio: 3 / 4;
+  aspect-ratio: 5 / 7;
   background: var(--color-background);
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .collection-card .card-image img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   transition: transform 0.3s ease;
 }
 
@@ -147,6 +148,9 @@
 
 .collection-card .card-details {
   padding: 0.75rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .collection-card .card-name {
@@ -193,29 +197,30 @@
    CARD ACTIONS
    ============================================ */
 
-.card-actions {
+.collection-card .card-actions {
   border-top: 1px solid var(--color-border);
   padding-top: 0.5rem;
+  margin-top: auto;
 }
 
-.action-buttons {
+.collection-card .action-buttons {
   display: flex;
   gap: 0.5rem;
 }
 
-.action-buttons .btn {
+.collection-card .action-buttons .btn {
   flex: 1;
   font-size: 0.75rem;
   padding: 0.4rem 0.5rem;
 }
 
-.edit-quantity {
+.collection-card .edit-quantity {
   display: flex;
   gap: 0.5rem;
   align-items: center;
 }
 
-.edit-quantity input {
+.collection-card .edit-quantity input {
   width: 50px;
   padding: 0.3rem 0.5rem;
   border: 1px solid var(--color-border);
@@ -224,7 +229,7 @@
   font-size: 0.85rem;
 }
 
-.edit-quantity .btn {
+.collection-card .edit-quantity .btn {
   font-size: 0.7rem;
   padding: 0.3rem 0.5rem;
 }
@@ -304,7 +309,7 @@
 }
 
 .collection-skeleton .skeleton-image {
-  aspect-ratio: 3 / 4;
+  aspect-ratio: 5 / 7;
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;

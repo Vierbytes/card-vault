@@ -12,9 +12,16 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { collectionAPI } from '../services/api';
+import { FiPackage } from 'react-icons/fi';
+import { GiCardPick } from 'react-icons/gi';
+import useCardTilt from '../hooks/useCardTilt';
+import Loader from '../components/Loader';
 import './Collection.css';
 
 function Collection() {
+  // 3D tilt effect handlers for card hover
+  const tiltHandlers = useCardTilt();
+
   // Collection data
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -35,6 +42,15 @@ function Collection() {
   useEffect(() => {
     fetchCollection();
   }, []);
+
+  // Recalculate stats whenever items change (edit qty, remove, etc.)
+  useEffect(() => {
+    const value = items.reduce((sum, item) => {
+      return sum + (item.card?.currentPrice || 0) * (item.quantity || 1);
+    }, 0);
+    setTotalValue(Math.round(value * 100) / 100);
+    setTotalCards(items.length);
+  }, [items]);
 
   const fetchCollection = async () => {
     setLoading(true);
@@ -135,17 +151,7 @@ function Collection() {
 
       {/* Collection content */}
       {loading ? (
-        <div className="collection-grid">
-          {[...Array(8)].map((_, i) => (
-            <div key={i} className="collection-skeleton">
-              <div className="skeleton-image"></div>
-              <div className="skeleton-content">
-                <div className="skeleton-text"></div>
-                <div className="skeleton-text short"></div>
-              </div>
-            </div>
-          ))}
-        </div>
+        <Loader message="Loading your collection..." />
       ) : error ? (
         <div className="collection-error">
           <p>{error}</p>
@@ -155,7 +161,7 @@ function Collection() {
         </div>
       ) : items.length === 0 ? (
         <div className="collection-empty">
-          <span className="empty-icon">📦</span>
+          <FiPackage className="empty-icon" />
           <h3>Your collection is empty</h3>
           <p>Start by browsing cards and adding them to your collection.</p>
           <Link to="/cards" className="btn btn-primary">
@@ -165,13 +171,13 @@ function Collection() {
       ) : (
         <div className="collection-grid">
           {items.map((item) => (
-            <div key={item._id} className="collection-card">
+            <div key={item._id} className="collection-card card-tilt" {...tiltHandlers}>
               <Link to={`/cards/${item.card?.externalId || item.card?._id}`} className="card-link">
                 <div className="card-image">
                   {item.card?.imageUrl ? (
                     <img src={item.card.imageUrl} alt={item.card.name} />
                   ) : (
-                    <span className="card-placeholder">🃏</span>
+                    <GiCardPick className="card-placeholder" />
                   )}
                   {item.card?.game && (
                     <span className="game-badge">{item.card.game}</span>
@@ -192,11 +198,11 @@ function Collection() {
                       {formatCondition(item.condition)}
                     </span>
                   )}
-                  {item.card?.price && (
-                    <span className="card-value">
-                      ${(parseFloat(item.card.price) * (item.quantity || 1)).toFixed(2)}
-                    </span>
-                  )}
+                  <span className="card-value">
+                    {item.card?.currentPrice > 0
+                      ? `$${(item.card.currentPrice * (item.quantity || 1)).toFixed(2)}`
+                      : 'N/A'}
+                  </span>
                 </div>
 
                 {/* Quantity editing */}
@@ -244,6 +250,7 @@ function Collection() {
                   )}
                 </div>
               </div>
+              <div className="light-shadow" />
             </div>
           ))}
         </div>
