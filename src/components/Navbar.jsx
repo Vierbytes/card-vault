@@ -8,6 +8,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { GiCardPick } from 'react-icons/gi';
 import './Navbar.css';
 
 function Navbar() {
@@ -39,7 +40,7 @@ function Navbar() {
       <div className="navbar-container">
         {/* Logo */}
         <Link to="/" className="navbar-logo" onClick={closeMenu}>
-          <span className="logo-icon">🃏</span>
+          <GiCardPick className="logo-icon" />
           <span className="logo-text">CardVault</span>
         </Link>
 

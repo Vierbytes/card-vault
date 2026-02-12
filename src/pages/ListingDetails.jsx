@@ -10,6 +10,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { listingAPI } from '../services/api';
+import { GiCardPick } from 'react-icons/gi';
 import './ListingDetails.css';
 
 function ListingDetails() {
@@ -126,7 +127,7 @@ function ListingDetails() {
             {listing.card?.imageUrl ? (
               <img src={listing.card.imageUrl} alt={listing.card.name} />
             ) : (
-              <span className="image-placeholder">🃏</span>
+              <GiCardPick className="image-placeholder" />
             )}
           </div>
           <Link

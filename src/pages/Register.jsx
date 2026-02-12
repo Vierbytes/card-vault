@@ -7,6 +7,8 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { GiCardPick } from 'react-icons/gi';
+import { FiAlertTriangle } from 'react-icons/fi';
 import './Auth.css';
 
 function Register() {
@@ -80,7 +82,7 @@ function Register() {
         {/* Header */}
         <div className="auth-header">
           <Link to="/" className="auth-logo">
-            🃏 CardVault
+            <GiCardPick style={{ verticalAlign: 'middle', marginRight: '0.25rem' }} /> CardVault
           </Link>
           <h1>Create an account</h1>
           <p>Join the community of card collectors</p>
@@ -89,7 +91,7 @@ function Register() {
         {/* Error message */}
         {(formError || error) && (
           <div className="auth-error">
-            <span className="error-icon">⚠️</span>
+            <FiAlertTriangle className="error-icon" />
             {formError || error}
           </div>
         )}

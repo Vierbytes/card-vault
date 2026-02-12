@@ -7,6 +7,8 @@
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { GiCardPick } from 'react-icons/gi';
+import { FiAlertTriangle } from 'react-icons/fi';
 import './Auth.css';
 
 function Login() {
@@ -68,7 +70,7 @@ function Login() {
         {/* Header */}
         <div className="auth-header">
           <Link to="/" className="auth-logo">
-            🃏 CardVault
+            <GiCardPick style={{ verticalAlign: 'middle', marginRight: '0.25rem' }} /> CardVault
           </Link>
           <h1>Welcome back</h1>
           <p>Sign in to your account to continue</p>
@@ -77,7 +79,7 @@ function Login() {
         {/* Error message */}
         {(formError || error) && (
           <div className="auth-error">
-            <span className="error-icon">⚠️</span>
+            <FiAlertTriangle className="error-icon" />
             {formError || error}
           </div>
         )}
