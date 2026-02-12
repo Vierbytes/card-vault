@@ -9,6 +9,8 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { collectionAPI, wishlistAPI, listingAPI, matchAPI } from '../services/api';
+import { FiPackage, FiDollarSign, FiHeart, FiTag, FiCamera, FiPlusCircle, FiSearch, FiShoppingCart } from 'react-icons/fi';
+import Loader from '../components/Loader';
 import './Dashboard.css';
 
 function Dashboard() {
@@ -68,7 +70,7 @@ function Dashboard() {
       {/* Stats cards */}
       <div className="stats-grid">
         <div className="stat-card">
-          <div className="stat-icon">📦</div>
+          <div className="stat-icon"><FiPackage /></div>
           <div className="stat-content">
             <span className="stat-value">{stats.collectionCount}</span>
             <span className="stat-label">Cards in Collection</span>
@@ -79,7 +81,7 @@ function Dashboard() {
         </div>
 
         <div className="stat-card highlight">
-          <div className="stat-icon">💰</div>
+          <div className="stat-icon"><FiDollarSign /></div>
           <div className="stat-content">
             <span className="stat-value">${stats.collectionValue.toFixed(2)}</span>
             <span className="stat-label">Collection Value</span>
@@ -90,7 +92,7 @@ function Dashboard() {
         </div>
 
         <div className="stat-card">
-          <div className="stat-icon">♡</div>
+          <div className="stat-icon"><FiHeart /></div>
           <div className="stat-content">
             <span className="stat-value">{stats.wishlistCount}</span>
             <span className="stat-label">Wishlist Items</span>
@@ -101,7 +103,7 @@ function Dashboard() {
         </div>
 
         <div className="stat-card">
-          <div className="stat-icon">🏷️</div>
+          <div className="stat-icon"><FiTag /></div>
           <div className="stat-content">
             <span className="stat-value">{stats.activeListings}</span>
             <span className="stat-label">Active Listings</span>
@@ -117,19 +119,19 @@ function Dashboard() {
         <h2>Quick Actions</h2>
         <div className="actions-grid">
           <Link to="/scanner" className="action-card">
-            <span className="action-icon">📷</span>
+            <FiCamera className="action-icon" />
             <span className="action-text">Scan a Card</span>
           </Link>
           <Link to="/listings/create" className="action-card">
-            <span className="action-icon">➕</span>
+            <FiPlusCircle className="action-icon" />
             <span className="action-text">Create Listing</span>
           </Link>
           <Link to="/cards" className="action-card">
-            <span className="action-icon">🔍</span>
+            <FiSearch className="action-icon" />
             <span className="action-text">Browse Cards</span>
           </Link>
           <Link to="/marketplace" className="action-card">
-            <span className="action-icon">🛒</span>
+            <FiShoppingCart className="action-icon" />
             <span className="action-text">Marketplace</span>
           </Link>
         </div>
@@ -147,10 +149,10 @@ function Dashboard() {
         <div className="matches-grid">
           {/* Sellers with cards you want */}
           <div className="match-card">
-            <h3>🛒 Cards You Want</h3>
+            <h3><FiShoppingCart style={{ verticalAlign: 'middle', marginRight: '0.5rem' }} />Cards You Want</h3>
             <p className="match-description">Sellers offering cards from your wishlist</p>
             {loading ? (
-              <div className="loading-text">Loading...</div>
+              <Loader message="Loading..." />
             ) : matches.sellersWithWantedCards?.length > 0 ? (
               <div className="match-list">
                 {matches.sellersWithWantedCards.slice(0, 3).map((match, index) => (
@@ -171,10 +173,10 @@ function Dashboard() {
 
           {/* Buyers for your cards */}
           <div className="match-card">
-            <h3>💵 Potential Buyers</h3>
+            <h3><FiDollarSign style={{ verticalAlign: 'middle', marginRight: '0.5rem' }} />Potential Buyers</h3>
             <p className="match-description">Users looking for cards you're selling</p>
             {loading ? (
-              <div className="loading-text">Loading...</div>
+              <Loader message="Loading..." />
             ) : matches.buyersForYourCards?.length > 0 ? (
               <div className="match-list">
                 {matches.buyersForYourCards.slice(0, 3).map((match, index) => (

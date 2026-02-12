@@ -12,6 +12,9 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { matchAPI } from '../services/api';
+import { FiSearch, FiDollarSign } from 'react-icons/fi';
+import { GiCardPick } from 'react-icons/gi';
+import Loader from '../components/Loader';
 import './Matches.css';
 
 function Matches() {
@@ -93,17 +96,7 @@ function Matches() {
 
       {/* Content */}
       {loading ? (
-        <div className="matches-loading">
-          {[...Array(4)].map((_, i) => (
-            <div key={i} className="match-skeleton">
-              <div className="skeleton-thumb"></div>
-              <div className="skeleton-details">
-                <div className="skeleton-text"></div>
-                <div className="skeleton-text short"></div>
-              </div>
-            </div>
-          ))}
-        </div>
+        <Loader message="Finding matches..." />
       ) : error ? (
         <div className="matches-error">
           <p>{error}</p>
@@ -115,7 +108,7 @@ function Matches() {
         <div className="matches-empty">
           {activeTab === 'buying' ? (
             <>
-              <span className="empty-icon">🔍</span>
+              <FiSearch className="empty-icon" />
               <h3>No matches yet</h3>
               <p>
                 Add cards to your wishlist and we'll match you with sellers.
@@ -126,7 +119,7 @@ function Matches() {
             </>
           ) : (
             <>
-              <span className="empty-icon">💵</span>
+              <FiDollarSign className="empty-icon" />
               <h3>No potential buyers yet</h3>
               <p>
                 Create listings and we'll match you with interested buyers.
@@ -150,7 +143,7 @@ function Matches() {
                   {match.card?.imageUrl ? (
                     <img src={match.card.imageUrl} alt={match.card.name} />
                   ) : (
-                    <span className="thumb-placeholder">🃏</span>
+                    <GiCardPick className="thumb-placeholder" />
                   )}
                 </div>
                 <div className="match-details">

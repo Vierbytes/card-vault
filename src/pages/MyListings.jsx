@@ -11,6 +11,9 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { listingAPI } from '../services/api';
+import { FiTag } from 'react-icons/fi';
+import { GiCardPick } from 'react-icons/gi';
+import Loader from '../components/Loader';
 import './MyListings.css';
 
 function MyListings() {
@@ -136,17 +139,7 @@ function MyListings() {
 
       {/* Listings content */}
       {loading ? (
-        <div className="listings-loading">
-          {[...Array(4)].map((_, i) => (
-            <div key={i} className="listing-skeleton-row">
-              <div className="skeleton-thumb"></div>
-              <div className="skeleton-details">
-                <div className="skeleton-text"></div>
-                <div className="skeleton-text short"></div>
-              </div>
-            </div>
-          ))}
-        </div>
+        <Loader message="Loading your listings..." />
       ) : error ? (
         <div className="listings-error">
           <p>{error}</p>
@@ -156,7 +149,7 @@ function MyListings() {
         </div>
       ) : listings.length === 0 ? (
         <div className="listings-empty">
-          <span className="empty-icon">🏷️</span>
+          <FiTag className="empty-icon" />
           <h3>No {activeTab !== 'all' ? activeTab : ''} listings</h3>
           <p>
             {activeTab === 'active'
@@ -178,7 +171,7 @@ function MyListings() {
                 {listing.card?.imageUrl ? (
                   <img src={listing.card.imageUrl} alt={listing.card.name} />
                 ) : (
-                  <span className="thumb-placeholder">🃏</span>
+                  <GiCardPick className="thumb-placeholder" />
                 )}
               </Link>
 
