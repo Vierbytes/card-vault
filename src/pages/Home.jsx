@@ -8,10 +8,14 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { cardAPI, listingAPI } from '../services/api';
+import { useAuth } from '../context/AuthContext';
+import { FiCamera, FiDollarSign, FiRepeat } from 'react-icons/fi';
+import { GiCardPick } from 'react-icons/gi';
 import CardGrid from '../components/CardGrid';
 import './Home.css';
 
 function Home() {
+  const { user } = useAuth();
   const [trendingCards, setTrendingCards] = useState([]);
   const [recentListings, setRecentListings] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -66,17 +70,17 @@ function Home() {
         {/* Feature cards */}
         <div className="hero-features">
           <div className="feature-card">
-            <span className="feature-icon">📷</span>
+            <FiCamera className="feature-icon" />
             <h3>Scan</h3>
             <p>Upload a card image and we'll identify it instantly</p>
           </div>
           <div className="feature-card">
-            <span className="feature-icon">💰</span>
+            <FiDollarSign className="feature-icon" />
             <h3>Price</h3>
             <p>Get real-time market prices and historical trends</p>
           </div>
           <div className="feature-card">
-            <span className="feature-icon">🤝</span>
+            <FiRepeat className="feature-icon" />
             <h3>Sell</h3>
             <p>List your cards and match with interested buyers</p>
           </div>
@@ -114,7 +118,7 @@ function Home() {
                   {listing.card?.imageUrl ? (
                     <img src={listing.card.imageUrl} alt={listing.card.name} />
                   ) : (
-                    <span className="placeholder">🃏</span>
+                    <GiCardPick className="placeholder" />
                   )}
                 </div>
                 <div className="listing-info">
@@ -130,14 +134,16 @@ function Home() {
         )}
       </section>
 
-      {/* CTA Section */}
-      <section className="cta-section">
-        <h2>Ready to start trading?</h2>
-        <p>Join thousands of collectors buying and selling cards on CardVault.</p>
-        <Link to="/register" className="btn btn-primary btn-lg">
-          Create Free Account
-        </Link>
-      </section>
+      {/* CTA Section - only show for guests */}
+      {!user && (
+        <section className="cta-section">
+          <h2>Ready to start trading?</h2>
+          <p>Join thousands of collectors buying and selling cards on CardVault.</p>
+          <Link to="/register" className="btn btn-primary btn-lg">
+            Create Free Account
+          </Link>
+        </section>
+      )}
     </div>
   );
 }
