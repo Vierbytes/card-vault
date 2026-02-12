@@ -122,6 +122,16 @@ export const cardAPI = {
 
   // Get random cards for featured/trending sections
   random: (count) => api.get('/cards/random', { params: { count } }),
+
+  // Scan a card image - sends the photo to the backend for OCR
+  // Uses FormData since we're uploading a file, not JSON
+  scan: (file) => {
+    const formData = new FormData();
+    formData.append('cardImage', file);
+    return api.post('/cards/scan', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+  },
 };
 
 // ============================================

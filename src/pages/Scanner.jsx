@@ -2,14 +2,14 @@
  * Card Scanner Page
  *
  * This page lets users take a photo of a card and identify it.
- * For now, I'm using the browser's camera API to capture an image,
- * then sending it to a card recognition service.
+ * I'm using the browser's camera API to capture an image,
+ * then sending it to the backend where Tesseract.js runs OCR on it.
  *
- * The flow is: take photo -> identify card -> show results -> add to collection/wishlist
+ * The flow is: take photo -> upload to backend -> OCR reads card name ->
+ * search TCGdex -> show matching cards
  *
- * Note: The actual image recognition could use Google Vision API,
- * a custom ML model, or even just OCR + text matching against the JustTCG database.
- * For this version, I'm doing OCR-style text extraction and searching.
+ * The OCR isn't perfect so there's also a manual search fallback
+ * where the user can type/correct the card name themselves.
  */
 
 import { useState, useRef } from 'react';
@@ -29,11 +29,16 @@ function Scanner() {
   const [isCapturing, setIsCapturing] = useState(false);
   const [stream, setStream] = useState(null);
 
+  // The actual file object for uploading to the backend
+  // Camera captures give us a dataURL, so I need to convert those to blobs
+  const [imageFile, setImageFile] = useState(null);
+
   // Recognition results
   const [results, setResults] = useState([]);
   const [scanning, setScanning] = useState(false);
   const [scanned, setScanned] = useState(false);
   const [error, setError] = useState(null);
+  const [detectedText, setDetectedText] = useState(null);
 
   // Manual search fallback
   const [manualQuery, setManualQuery] = useState('');
@@ -75,6 +80,8 @@ function Scanner() {
   };
 
   // Capture photo from camera
+  // I also need to convert the canvas to a blob/file so I can upload it
+  // to the backend for OCR processing
   const capturePhoto = () => {
     if (!videoRef.current || !canvasRef.current) return;
 
@@ -88,13 +95,25 @@ function Scanner() {
 
     const dataUrl = canvas.toDataURL('image/jpeg');
     setImagePreview(dataUrl);
+
+    // Convert canvas to a blob so we can send it as a file upload
+    canvas.toBlob((blob) => {
+      if (blob) {
+        const file = new File([blob], 'card-scan.jpg', { type: 'image/jpeg' });
+        setImageFile(file);
+      }
+    }, 'image/jpeg');
+
     stopCamera();
   };
 
   // Handle file upload
+  // Save both the preview (for display) and the actual file (for OCR upload)
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
     if (!file) return;
+
+    setImageFile(file);
 
     const reader = new FileReader();
     reader.onload = (event) => {
@@ -103,39 +122,41 @@ function Scanner() {
     reader.readAsDataURL(file);
   };
 
-  // Scan the captured image
-  // For now, this prompts the user to enter the card name
-  // In a full implementation, this would use an image recognition API
+  // Scan the captured image using the backend OCR endpoint
+  // Sends the image file to /api/cards/scan where Tesseract.js reads the text
+  // and searches TCGdex for matching cards
   const handleScan = async () => {
+    if (!imageFile) {
+      setError('No image to scan. Please capture or upload an image first.');
+      return;
+    }
+
     setScanning(true);
     setScanned(true);
     setError(null);
     setResults([]);
+    setDetectedText(null);
 
     try {
-      // Simulate a brief scanning delay
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      const response = await cardAPI.scan(imageFile);
+      const { extractedText, searchQuery, results: scanResults, message } = response.data.data;
 
-      // For now, prompt user to type the card name they see
-      // In production, this would be replaced with actual OCR / image recognition
-      const cardName = window.prompt(
-        'Image recognition is processing...\n\n' +
-        'To help identify the card, type the card name you see on it:'
-      );
+      setDetectedText(searchQuery || extractedText);
+      setResults(scanResults || []);
 
-      if (!cardName) {
-        setScanning(false);
-        setScanned(false);
-        return;
+      // Pre-fill the manual search with whatever the OCR detected
+      // so the user can easily tweak it if the OCR was off
+      if (searchQuery) {
+        setManualQuery(searchQuery);
       }
 
-      // Search for the card
-      const response = await cardAPI.search({ q: cardName.trim(), limit: 8 });
-      setResults(response.data.data || []);
-      setManualQuery(cardName);
+      // If OCR couldn't find a name, show a helpful message
+      if (message) {
+        setError(message);
+      }
     } catch (err) {
       console.error('Scan error:', err);
-      setError('Failed to identify card. Try searching manually.');
+      setError('Failed to scan card. Try searching manually below.');
     } finally {
       setScanning(false);
     }
@@ -161,13 +182,15 @@ function Scanner() {
     }
   };
 
-  // Reset everything
+  // Reset everything back to the initial state
   const handleReset = () => {
     stopCamera();
     setImagePreview(null);
+    setImageFile(null);
     setResults([]);
     setScanned(false);
     setError(null);
+    setDetectedText(null);
     setManualQuery('');
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
@@ -267,7 +290,14 @@ function Scanner() {
         <div className="results-section">
           <h2>Results</h2>
 
-          {/* Manual search fallback */}
+          {/* Show what the OCR detected so the user knows what was read */}
+          {detectedText && (
+            <p className="detected-text">
+              Detected: <strong>{detectedText}</strong>
+            </p>
+          )}
+
+          {/* Manual search fallback - pre-filled with OCR result so user can tweak */}
           <form className="manual-search" onSubmit={handleManualSearch}>
             <input
               type="text"
