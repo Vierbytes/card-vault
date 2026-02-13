@@ -162,7 +162,7 @@ function ListingDetails() {
           {/* Seller info */}
           <div className="seller-section">
             <h3>Seller</h3>
-            <div className="seller-card">
+            <Link to={`/users/${listing.seller?._id}`} className="seller-card">
               <span className="seller-avatar">
                 {listing.seller?.username?.charAt(0).toUpperCase()}
               </span>
@@ -172,7 +172,7 @@ function ListingDetails() {
                   Member since {new Date(listing.seller?.createdAt).toLocaleDateString()}
                 </span>
               </div>
-            </div>
+            </Link>
           </div>
 
           {/* Make offer button - show for non-owners on active listings */}

@@ -224,7 +224,7 @@ function OfferDetails() {
         <div className="offer-parties">
           <div className="party">
             <span className="party-role">Buyer</span>
-            <div className="party-user">
+            <Link to={`/users/${offer.buyer?._id}`} className="party-user">
               <span className="party-avatar">
                 {offer.buyer?.username?.charAt(0).toUpperCase()}
               </span>
@@ -232,11 +232,11 @@ function OfferDetails() {
                 {offer.buyer?.username}
                 {isBuyer && ' (You)'}
               </span>
-            </div>
+            </Link>
           </div>
           <div className="party">
             <span className="party-role">Seller</span>
-            <div className="party-user">
+            <Link to={`/users/${offer.seller?._id}`} className="party-user">
               <span className="party-avatar">
                 {offer.seller?.username?.charAt(0).toUpperCase()}
               </span>
@@ -244,7 +244,7 @@ function OfferDetails() {
                 {offer.seller?.username}
                 {isSeller && ' (You)'}
               </span>
-            </div>
+            </Link>
           </div>
         </div>
 

@@ -35,6 +35,7 @@ import Scanner from './pages/Scanner';
 import AuthCallback from './pages/AuthCallback';
 import MyOffers from './pages/MyOffers';
 import OfferDetails from './pages/OfferDetails';
+import UserProfile from './pages/UserProfile';
 // Styles
 import './App.css';
 
@@ -107,6 +108,7 @@ function App() {
             <Route path="/cards/:id" element={<CardDetails />} />
             <Route path="/scanner" element={<Scanner />} />
             <Route path="/listings/:id" element={<ListingDetails />} />
+            <Route path="/users/:id" element={<UserProfile />} />
 
             {/* Protected routes - require authentication */}
             <Route

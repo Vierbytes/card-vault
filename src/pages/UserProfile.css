@@ -1,0 +1,354 @@
+/**
+ * User Profile Page Styles
+ *
+ * Public profile view for users. All class names prefixed with "up-"
+ * to avoid conflicts with Marketplace's listing-card classes.
+ *
+ * Layout: centered container with stacked sections - header, stats, listings.
+ */
+
+/* ============================================
+   PAGE LAYOUT
+   ============================================ */
+
+.up-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+/* ============================================
+   PROFILE HEADER
+   ============================================ */
+
+.up-header {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 2rem;
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+/* Large circular avatar */
+.up-avatar-large {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.up-avatar-large img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.up-avatar-fallback {
+  font-size: 3rem;
+  font-weight: 700;
+  color: white;
+}
+
+/* Header text content */
+.up-header-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.up-header-info h1 {
+  font-size: 2rem;
+  margin-bottom: 0.25rem;
+}
+
+.up-member-since {
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.up-bio {
+  margin-bottom: 1.25rem;
+  line-height: 1.6;
+  color: var(--color-text);
+}
+
+/* Favorite game tags */
+.up-games {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.up-game-tag {
+  padding: 0.4rem 0.8rem;
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.up-edit-btn {
+  margin-top: 0.5rem;
+}
+
+/* ============================================
+   TRADE STATS
+   ============================================ */
+
+.up-stats {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 2rem;
+}
+
+.up-stats h2 {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.up-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+.up-stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.25rem 0.75rem;
+  background: var(--color-background);
+  border-radius: var(--radius-md);
+  text-align: center;
+}
+
+.up-stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  line-height: 1;
+  margin-bottom: 0.4rem;
+}
+
+.up-stat-label {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+/* ============================================
+   LISTINGS SECTION
+   ============================================ */
+
+.up-listings {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.up-listings h2 {
+  font-size: 1.25rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* Grid layout for listing cards */
+.up-listings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 1.25rem;
+}
+
+/* Individual listing card */
+.up-listing-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  text-decoration: none;
+  color: var(--color-text);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.up-listing-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+  text-decoration: none;
+}
+
+/* Card image area */
+.up-listing-image {
+  aspect-ratio: 3 / 4;
+  background: var(--color-surface);
+  overflow: hidden;
+}
+
+.up-listing-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.up-listing-card:hover .up-listing-image img {
+  transform: scale(1.05);
+}
+
+.up-listing-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-size: 3rem;
+  color: var(--color-text-secondary);
+  opacity: 0.3;
+}
+
+/* Card info below image */
+.up-listing-details {
+  padding: 0.75rem;
+}
+
+.up-listing-details h3 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.3;
+  margin-bottom: 0.2rem;
+  /* Truncate long names to 2 lines */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.up-listing-set {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.up-listing-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.up-listing-price {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.up-listing-condition {
+  font-size: 0.7rem;
+  color: var(--color-text-secondary);
+  background: var(--color-surface);
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+}
+
+/* ============================================
+   EMPTY & ERROR STATES
+   ============================================ */
+
+.up-empty {
+  text-align: center;
+  padding: 3rem 2rem;
+}
+
+.up-empty-icon {
+  font-size: 3rem;
+  color: var(--color-text-secondary);
+  opacity: 0.5;
+  margin-bottom: 1rem;
+}
+
+.up-empty p {
+  color: var(--color-text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+.up-error {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.up-error h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.up-error p {
+  color: var(--color-text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 768px) {
+  .up-page {
+    padding: 1.5rem 1rem;
+  }
+
+  .up-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1.5rem;
+  }
+
+  .up-header-info h1 {
+    font-size: 1.5rem;
+  }
+
+  .up-games {
+    justify-content: center;
+  }
+
+  .up-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .up-listings-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .up-avatar-large {
+    width: 100px;
+    height: 100px;
+  }
+
+  .up-avatar-fallback {
+    font-size: 2.5rem;
+  }
+
+  .up-stat-value {
+    font-size: 1.5rem;
+  }
+}

@@ -93,6 +93,7 @@ export const userAPI = {
   updateProfile: (userData) => api.put('/users/me', userData),
   updatePassword: (passwords) => api.put('/users/me/password', passwords),
   getUserListings: (userId) => api.get(`/users/${userId}/listings`),
+  getUserTradeStats: (userId) => api.get(`/users/${userId}/trade-stats`),
 
   // Avatar upload needs FormData instead of JSON
   // I had to override the Content-Type header so the browser sets

@@ -168,8 +168,13 @@ function MyOffers() {
                 </p>
               </div>
 
-              {/* Other party */}
-              <div className="offer-other-user">
+              {/* Other party - Link with stopPropagation so clicking
+                 the username goes to their profile instead of the offer */}
+              <Link
+                to={`/users/${activeTab === 'sent' ? offer.seller?._id : offer.buyer?._id}`}
+                className="offer-other-user"
+                onClick={(e) => e.stopPropagation()}
+              >
                 <span className="other-avatar">
                   {activeTab === 'sent'
                     ? offer.seller?.username?.charAt(0).toUpperCase()
@@ -180,7 +185,7 @@ function MyOffers() {
                     ? offer.seller?.username
                     : offer.buyer?.username}
                 </span>
-              </div>
+              </Link>
 
               {/* Status and date */}
               <div className="offer-meta">
