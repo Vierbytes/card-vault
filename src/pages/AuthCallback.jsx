@@ -5,8 +5,11 @@
  * When a user clicks "Sign in with Google", Auth0 redirects them to Google,
  * then back to this /callback URL with an authorization code.
  *
- * The Auth0 SDK processes the code and state URL params automatically.
- * Once it's done, we grab the access token and send it to our backend.
+ * I had a tricky bug where the old version relied on isAuthenticated
+ * changing reactively, but it would sometimes be false even after
+ * loading finished because the SDK hadn't finished the code exchange yet.
+ * Now I call handleRedirectCallback explicitly to process the code param,
+ * which is way more reliable.
  */
 
 import { useEffect, useRef } from 'react';
@@ -18,7 +21,7 @@ import { useToast } from '../context/ToastContext';
 function AuthCallback() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { getAccessTokenSilently, isAuthenticated: auth0Authenticated, isLoading, error: auth0Error } = useAuth0();
+  const { handleRedirectCallback, getAccessTokenSilently } = useAuth0();
   const { socialLogin } = useAuth();
   const { showToast } = useToast();
 
@@ -26,45 +29,29 @@ function AuthCallback() {
   const hasRun = useRef(false);
 
   useEffect(() => {
-    const handleCallback = async () => {
+    const processCallback = async () => {
       if (hasRun.current) return;
-
-      // Wait for Auth0 SDK to finish processing the callback URL params
-      if (isLoading) return;
+      hasRun.current = true;
 
       // Check if we even have the expected callback params
       // If someone lands here without code/state, just redirect to login
       const hasCode = searchParams.has('code');
-      if (!hasCode && !auth0Authenticated) {
-        hasRun.current = true;
+      const hasState = searchParams.has('state');
+
+      if (!hasCode || !hasState) {
         navigate('/login', { replace: true });
         return;
       }
-
-      // If Auth0 had an error processing the callback
-      if (auth0Error) {
-        hasRun.current = true;
-        console.error('Auth0 callback error:', auth0Error);
-        showToast('Sign in failed. Please try again.', 'error');
-        navigate('/login', { replace: true });
-        return;
-      }
-
-      // If Auth0 finished loading but user isn't authenticated
-      if (!auth0Authenticated) {
-        hasRun.current = true;
-        showToast('Sign in failed. Please try again.', 'error');
-        navigate('/login', { replace: true });
-        return;
-      }
-
-      // Auth0 authenticated - exchange their token for our app JWT
-      hasRun.current = true;
 
       try {
+        // Explicitly tell the Auth0 SDK to process the code + state params
+        // This exchanges the authorization code for tokens
+        await handleRedirectCallback();
+
+        // Now get the access token to send to our backend
         const accessToken = await getAccessTokenSilently();
 
-        // Send the Auth0 token to our backend
+        // Send the Auth0 token to our backend for our own JWT
         const result = await socialLogin(accessToken);
 
         if (result.success) {
@@ -75,14 +62,14 @@ function AuthCallback() {
           navigate('/login', { replace: true });
         }
       } catch (err) {
-        console.error('Token exchange error:', err);
-        showToast('Something went wrong during sign in.', 'error');
+        console.error('Auth callback error:', err);
+        showToast('Sign in failed. Please try again.', 'error');
         navigate('/login', { replace: true });
       }
     };
 
-    handleCallback();
-  }, [auth0Authenticated, isLoading, auth0Error]);
+    processCallback();
+  }, []);
 
   return (
     <div className="loading-screen">
