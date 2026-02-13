@@ -12,6 +12,7 @@ import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { listingAPI } from '../services/api';
 import { GiCardPick } from 'react-icons/gi';
+import MakeOfferModal from '../components/MakeOfferModal';
 import './ListingDetails.css';
 
 function ListingDetails() {
@@ -24,6 +25,9 @@ function ListingDetails() {
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // Make offer modal
+  const [showOfferModal, setShowOfferModal] = useState(false);
 
   // Fetch listing
   useEffect(() => {
@@ -171,6 +175,18 @@ function ListingDetails() {
             </div>
           </div>
 
+          {/* Make offer button - show for non-owners on active listings */}
+          {!isOwner && user && listing.status === 'active' && (
+            <div className="offer-action">
+              <button
+                className="btn btn-primary"
+                onClick={() => setShowOfferModal(true)}
+              >
+                Make an Offer
+              </button>
+            </div>
+          )}
+
           {/* Owner actions */}
           {isOwner && listing.status === 'active' && (
             <div className="owner-actions">
@@ -189,6 +205,14 @@ function ListingDetails() {
           </p>
         </div>
       </div>
+
+      {/* Make offer modal */}
+      {showOfferModal && (
+        <MakeOfferModal
+          listing={listing}
+          onClose={() => setShowOfferModal(false)}
+        />
+      )}
     </div>
   );
 }

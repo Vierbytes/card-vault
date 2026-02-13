@@ -179,4 +179,51 @@ export const matchAPI = {
   getMatches: () => api.get('/matches'),
 };
 
+// ============================================
+// TRADE OFFER API CALLS
+// ============================================
+
+export const tradeOfferAPI = {
+  // Create a new offer on a listing
+  create: (offerData) => api.post('/trade-offers', offerData),
+
+  // Get offers I've sent as a buyer
+  getSent: (status) => api.get('/trade-offers/sent', { params: { status } }),
+
+  // Get offers I've received as a seller
+  getReceived: (status) => api.get('/trade-offers/received', { params: { status } }),
+
+  // Get a single offer by ID
+  getById: (offerId) => api.get(`/trade-offers/${offerId}`),
+
+  // Accept an offer (seller action)
+  accept: (offerId, responseMessage) =>
+    api.put(`/trade-offers/${offerId}/accept`, { responseMessage }),
+
+  // Decline an offer (seller action)
+  decline: (offerId, responseMessage) =>
+    api.put(`/trade-offers/${offerId}/decline`, { responseMessage }),
+
+  // Cancel an offer (buyer action)
+  cancel: (offerId) => api.put(`/trade-offers/${offerId}/cancel`),
+
+  // Get all offers for a specific listing (seller)
+  getForListing: (listingId) => api.get(`/trade-offers/listing/${listingId}`),
+};
+
+// ============================================
+// MESSAGE API CALLS
+// ============================================
+
+export const messageAPI = {
+  // Get all messages for a trade offer thread
+  getForOffer: (offerId) => api.get(`/messages/offer/${offerId}`),
+
+  // Send a message in a trade offer thread
+  send: (messageData) => api.post('/messages', messageData),
+
+  // Mark messages as read
+  markRead: (offerId) => api.put(`/messages/offer/${offerId}/read`),
+};
+
 export default api;

@@ -15,6 +15,7 @@ import { matchAPI } from '../services/api';
 import { FiSearch, FiDollarSign } from 'react-icons/fi';
 import { GiCardPick } from 'react-icons/gi';
 import Loader from '../components/Loader';
+import MakeOfferModal from '../components/MakeOfferModal';
 import './Matches.css';
 
 function Matches() {
@@ -28,6 +29,9 @@ function Matches() {
 
   // Tab to switch between buying and selling matches
   const [activeTab, setActiveTab] = useState('buying');
+
+  // Make offer modal - stores the listing to make an offer on
+  const [offerListing, setOfferListing] = useState(null);
 
   // Fetch matches on mount
   useEffect(() => {
@@ -192,15 +196,30 @@ function Matches() {
                 </div>
               )}
 
-              {/* Action */}
+              {/* Actions */}
               {activeTab === 'buying' && match.listing?._id && (
-                <Link to={`/listings/${match.listing._id}`} className="btn btn-sm btn-primary">
-                  View Listing
-                </Link>
+                <div className="match-actions">
+                  <Link to={`/listings/${match.listing._id}`} className="btn btn-sm btn-secondary">
+                    View Listing
+                  </Link>
+                  <button
+                    className="btn btn-sm btn-primary"
+                    onClick={() => setOfferListing({ ...match.listing, card: match.card })}
+                  >
+                    Make Offer
+                  </button>
+                </div>
               )}
             </div>
           ))}
         </div>
+      )}
+      {/* Make offer modal */}
+      {offerListing && (
+        <MakeOfferModal
+          listing={offerListing}
+          onClose={() => setOfferListing(null)}
+        />
       )}
     </div>
   );

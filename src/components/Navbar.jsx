@@ -101,6 +101,9 @@ function Navbar() {
                     <Link to="/listings/mine" className="dropdown-link" onClick={closeMenu}>
                       My Listings
                     </Link>
+                    <Link to="/offers" className="dropdown-link" onClick={closeMenu}>
+                      Offers
+                    </Link>
                     <hr className="dropdown-divider" />
                     <button className="dropdown-link logout-btn" onClick={handleLogout}>
                       Logout

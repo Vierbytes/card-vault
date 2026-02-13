@@ -33,6 +33,8 @@ import Profile from './pages/Profile';
 import Matches from './pages/Matches';
 import Scanner from './pages/Scanner';
 import AuthCallback from './pages/AuthCallback';
+import MyOffers from './pages/MyOffers';
+import OfferDetails from './pages/OfferDetails';
 // Styles
 import './App.css';
 
@@ -160,6 +162,22 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Matches />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/offers"
+              element={
+                <ProtectedRoute>
+                  <MyOffers />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/offers/:id"
+              element={
+                <ProtectedRoute>
+                  <OfferDetails />
                 </ProtectedRoute>
               }
             />
