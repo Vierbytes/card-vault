@@ -38,6 +38,8 @@ import AuthCallback from './pages/AuthCallback';
 import MyOffers from './pages/MyOffers';
 import OfferDetails from './pages/OfferDetails';
 import UserProfile from './pages/UserProfile';
+import Transactions from './pages/Transactions';
+import PaymentSuccess from './pages/PaymentSuccess';
 // Styles
 import './App.css';
 
@@ -184,6 +186,22 @@ function App() {
               element={
                 <ProtectedRoute>
                   <OfferDetails />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/transactions"
+              element={
+                <ProtectedRoute>
+                  <Transactions />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/payment-success"
+              element={
+                <ProtectedRoute>
+                  <PaymentSuccess />
                 </ProtectedRoute>
               }
             />

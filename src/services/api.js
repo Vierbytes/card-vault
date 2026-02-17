@@ -245,4 +245,23 @@ export const notificationAPI = {
   markAllAsRead: () => api.put('/notifications/mark-all-read'),
 };
 
+// ============================================
+// PAYMENT API CALLS
+// ============================================
+
+export const paymentAPI = {
+  // Create a Stripe Checkout Session for an accepted offer
+  createCheckoutSession: (offerId) =>
+    api.post('/payments/create-checkout-session', { offerId }),
+};
+
+// ============================================
+// TRANSACTION API CALLS
+// ============================================
+
+export const transactionAPI = {
+  // Get my purchase and sale history
+  getAll: () => api.get('/transactions'),
+};
+
 export default api;

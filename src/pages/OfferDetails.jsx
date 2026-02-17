@@ -15,7 +15,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
-import { tradeOfferAPI, messageAPI } from '../services/api';
+import { tradeOfferAPI, messageAPI, paymentAPI } from '../services/api';
 import { GiCardPick } from 'react-icons/gi';
 import Loader from '../components/Loader';
 import './OfferDetails.css';
@@ -39,6 +39,9 @@ function OfferDetails() {
   const [showResponseForm, setShowResponseForm] = useState(null); // 'accept' or 'decline'
   const [responseMessage, setResponseMessage] = useState('');
   const [responding, setResponding] = useState(false);
+
+  // Payment state
+  const [processingPayment, setProcessingPayment] = useState(false);
 
   // Ref for scrolling messages to bottom
   const messagesEndRef = useRef(null);
@@ -142,6 +145,19 @@ function OfferDetails() {
     }
   };
 
+  // Handle Pay Now - redirect to Stripe Checkout
+  const handlePayNow = async () => {
+    setProcessingPayment(true);
+    try {
+      const response = await paymentAPI.createCheckoutSession(id);
+      // Redirect to Stripe's hosted checkout page
+      window.location.href = response.data.data.url;
+    } catch (err) {
+      showToast('Failed to start payment process', 'error');
+      setProcessingPayment(false);
+    }
+  };
+
   // Status badge styling
   const getStatusBadge = (status) => {
     const styles = {
@@ -149,6 +165,7 @@ function OfferDetails() {
       accepted: 'badge-accepted',
       declined: 'badge-declined',
       cancelled: 'badge-cancelled',
+      completed: 'badge-completed',
     };
     return styles[status] || '';
   };
@@ -326,6 +343,40 @@ function OfferDetails() {
               </div>
             </div>
           )}
+        </div>
+      )}
+
+      {/* Payment section - shows when offer is accepted and user is buyer */}
+      {offer.status === 'accepted' && isBuyer && (
+        <div className="payment-section">
+          <h3>Offer Accepted!</h3>
+          <p>The seller has accepted your offer. Complete your purchase below.</p>
+          <button
+            className="btn btn-pay-now"
+            onClick={handlePayNow}
+            disabled={processingPayment}
+          >
+            {processingPayment ? 'Redirecting to checkout...' : `Pay $${offer.offeredPrice?.toFixed(2)}`}
+          </button>
+        </div>
+      )}
+
+      {/* Waiting for payment notice - shows to seller when accepted */}
+      {offer.status === 'accepted' && isSeller && (
+        <div className="payment-section waiting">
+          <h3>Waiting for Payment</h3>
+          <p>You accepted this offer. Waiting for the buyer to complete payment.</p>
+        </div>
+      )}
+
+      {/* Completed section - shows when transaction is done */}
+      {offer.status === 'completed' && (
+        <div className="completed-section">
+          <h3>Transaction Completed</h3>
+          <p>This trade has been completed successfully.</p>
+          <Link to="/transactions" className="btn btn-primary">
+            View Transaction History
+          </Link>
         </div>
       )}
 

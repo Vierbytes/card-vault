@@ -60,6 +60,7 @@ function MyOffers() {
       accepted: 'badge-accepted',
       declined: 'badge-declined',
       cancelled: 'badge-cancelled',
+      completed: 'badge-completed',
     };
     return styles[status] || '';
   };
