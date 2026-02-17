@@ -13,6 +13,7 @@ import { Auth0Provider } from '@auth0/auth0-react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { ToastProvider } from './context/ToastContext';
+import { NotificationProvider } from './context/NotificationContext';
 
 // Layout components
 import Navbar from './components/Navbar';
@@ -98,6 +99,7 @@ function App() {
       <AuthProvider>
         <ThemeProvider>
         <ToastProvider>
+        <NotificationProvider>
         <AppLayout>
           <Routes>
             {/* Public routes - anyone can access these */}
@@ -190,6 +192,7 @@ function App() {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AppLayout>
+        </NotificationProvider>
         </ToastProvider>
         </ThemeProvider>
       </AuthProvider>

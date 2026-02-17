@@ -227,4 +227,22 @@ export const messageAPI = {
   markRead: (offerId) => api.put(`/messages/offer/${offerId}/read`),
 };
 
+// ============================================
+// NOTIFICATION API CALLS
+// ============================================
+
+export const notificationAPI = {
+  // Get my notifications (newest first, with optional limit)
+  getAll: (params) => api.get('/notifications', { params }),
+
+  // Get count of unread notifications (for the bell badge)
+  getUnreadCount: () => api.get('/notifications/unread-count'),
+
+  // Mark a single notification as read
+  markAsRead: (notificationId) => api.put(`/notifications/${notificationId}/read`),
+
+  // Mark all notifications as read
+  markAllAsRead: () => api.put('/notifications/mark-all-read'),
+};
+
 export default api;
