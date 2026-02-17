@@ -5,8 +5,14 @@
  * This used to be two separate pages (one for JustTCG, one for TCGdex)
  * but now everything goes through TCGdex so I merged them into one.
  *
+ * I also added card mechanics data from the Pokemon TCG API (pokemontcg.io)
+ * which gives us attacks, abilities, weaknesses, resistances, retreat cost,
+ * evolution info, legalities, and flavor text. The mechanics data is optional
+ * so the page still works fine if that API call fails.
+ *
  * Includes: card image, details table, pricing info, price history chart,
  * action buttons (add to collection/wishlist, create listing),
+ * card mechanics (attacks, abilities, combat info),
  * and an animated Pokemon sprite from PokeAPI GraphQL.
  */
 
@@ -352,15 +358,183 @@ function CardDetails() {
                     <td>{card.illustrator}</td>
                   </tr>
                 )}
+                {/* Extra details from Pokemon TCG API */}
+                {card.mechanics?.evolvesFrom && (
+                  <tr>
+                    <td>Evolves From</td>
+                    <td>{card.mechanics.evolvesFrom}</td>
+                  </tr>
+                )}
+                {card.mechanics?.subtypes?.length > 0 && (
+                  <tr>
+                    <td>Subtypes</td>
+                    <td>{card.mechanics.subtypes.join(', ')}</td>
+                  </tr>
+                )}
+                {card.mechanics?.regulationMark && (
+                  <tr>
+                    <td>Regulation Mark</td>
+                    <td>{card.mechanics.regulationMark}</td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
 
-          {/* Description if available */}
-          {card.description && (
+          {/* Description - use flavor text from Pokemon TCG API if available,
+              otherwise fall back to TCGdex description */}
+          {(card.mechanics?.flavorText || card.description) && (
             <div className="card-description">
               <h3>Description</h3>
-              <p>{card.description}</p>
+              <p>{card.mechanics?.flavorText || card.description}</p>
+            </div>
+          )}
+
+          {/* ============================================
+              CARD MECHANICS from Pokemon TCG API
+              These sections only show up if the mechanics
+              data was successfully fetched
+              ============================================ */}
+
+          {/* Abilities - things like "Ability: Blaze" that aren't attacks */}
+          {card.mechanics?.abilities?.length > 0 && (
+            <div className="mechanics-section">
+              <h3>Abilities</h3>
+              <div className="abilities-list">
+                {card.mechanics.abilities.map((ability, index) => (
+                  <div key={index} className="ability-item">
+                    <div className="ability-header">
+                      <span className="ability-type-badge">{ability.type}</span>
+                      <span className="ability-name">{ability.name}</span>
+                    </div>
+                    {ability.text && <p className="ability-text">{ability.text}</p>}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Attacks - the moves this card can use in battle */}
+          {card.mechanics?.attacks?.length > 0 && (
+            <div className="mechanics-section">
+              <h3>Attacks</h3>
+              <div className="attacks-list">
+                {card.mechanics.attacks.map((attack, index) => (
+                  <div key={index} className="attack-item">
+                    <div className="attack-header">
+                      <div className="attack-cost">
+                        {attack.cost.map((energy, i) => (
+                          <span
+                            key={i}
+                            className={`energy-badge energy-${energy.toLowerCase()}`}
+                            title={energy}
+                          >
+                            {energy.charAt(0)}
+                          </span>
+                        ))}
+                      </div>
+                      <span className="attack-name">{attack.name}</span>
+                      {attack.damage && (
+                        <span className="attack-damage">{attack.damage}</span>
+                      )}
+                    </div>
+                    {attack.text && <p className="attack-text">{attack.text}</p>}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Combat Info - weaknesses, resistances, and retreat cost */}
+          {(card.mechanics?.weaknesses?.length > 0 ||
+            card.mechanics?.resistances?.length > 0 ||
+            card.mechanics?.retreatCost?.length > 0) && (
+            <div className="mechanics-section">
+              <h3>Combat Info</h3>
+              <div className="combat-grid">
+                {/* Weaknesses */}
+                {card.mechanics.weaknesses?.length > 0 && (
+                  <div className="combat-column">
+                    <h4>Weakness</h4>
+                    {card.mechanics.weaknesses.map((w, i) => (
+                      <div key={i} className="combat-item">
+                        <span
+                          className={`energy-badge energy-${w.type.toLowerCase()}`}
+                          title={w.type}
+                        >
+                          {w.type.charAt(0)}
+                        </span>
+                        <span>{w.value}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Resistances */}
+                {card.mechanics.resistances?.length > 0 && (
+                  <div className="combat-column">
+                    <h4>Resistance</h4>
+                    {card.mechanics.resistances.map((r, i) => (
+                      <div key={i} className="combat-item">
+                        <span
+                          className={`energy-badge energy-${r.type.toLowerCase()}`}
+                          title={r.type}
+                        >
+                          {r.type.charAt(0)}
+                        </span>
+                        <span>{r.value}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Retreat Cost */}
+                {card.mechanics.retreatCost?.length > 0 && (
+                  <div className="combat-column">
+                    <h4>Retreat Cost</h4>
+                    <div className="combat-item">
+                      {card.mechanics.retreatCost.map((energy, i) => (
+                        <span
+                          key={i}
+                          className={`energy-badge energy-${energy.toLowerCase()}`}
+                          title={energy}
+                        >
+                          {energy.charAt(0)}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Rules - common for ex, V, VMAX, VSTAR cards */}
+          {card.mechanics?.rules?.length > 0 && (
+            <div className="mechanics-section">
+              <h3>Rules</h3>
+              <ul className="rules-list">
+                {card.mechanics.rules.map((rule, index) => (
+                  <li key={index}>{rule}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {/* Legalities - which formats this card is legal in */}
+          {card.mechanics?.legalities && (
+            <div className="mechanics-section">
+              <h3>Format Legalities</h3>
+              <div className="legality-badges">
+                {Object.entries(card.mechanics.legalities).map(([format, status]) => (
+                  <span
+                    key={format}
+                    className={`legality-badge legality-${status.toLowerCase()}`}
+                  >
+                    {format}: {status}
+                  </span>
+                ))}
+              </div>
             </div>
           )}
         </div>
@@ -378,6 +552,14 @@ function CardDetails() {
         <a href="https://tcgdex.dev" target="_blank" rel="noopener noreferrer">
           TCGdex
         </a>
+        {card.mechanics && (
+          <>
+            {' · Mechanics from '}
+            <a href="https://pokewallet.io" target="_blank" rel="noopener noreferrer">
+              Pokewallet
+            </a>
+          </>
+        )}
         {spriteData && (
           <>
             {' · Sprites from '}

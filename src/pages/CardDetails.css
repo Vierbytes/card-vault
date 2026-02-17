@@ -377,6 +377,235 @@
 }
 
 /* ============================================
+   CARD DESCRIPTION
+   ============================================ */
+
+.card-description {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.card-description h3 {
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.card-description p {
+  color: var(--color-text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  font-style: italic;
+}
+
+/* ============================================
+   CARD MECHANICS (from Pokemon TCG API)
+   These sections show attacks, abilities,
+   weaknesses, resistances, retreat cost, etc.
+   ============================================ */
+
+.mechanics-section {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.mechanics-section h3 {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* --- Abilities --- */
+
+.abilities-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.ability-item {
+  padding: 1rem;
+  background-color: var(--color-background);
+  border-radius: 8px;
+}
+
+.ability-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.ability-type-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.ability-name {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.ability-text {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+/* --- Attacks --- */
+
+.attacks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.attack-item {
+  padding: 1rem;
+  background-color: var(--color-background);
+  border-radius: 8px;
+}
+
+.attack-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.attack-cost {
+  display: flex;
+  gap: 0.25rem;
+  flex-shrink: 0;
+}
+
+.attack-name {
+  font-weight: 700;
+  font-size: 1rem;
+  flex: 1;
+}
+
+.attack-damage {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.attack-text {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+/* --- Energy Type Badges ---
+   Small colored circles that represent the energy cost of attacks,
+   weaknesses, resistances, and retreat cost. Each Pokemon type has
+   its own color. */
+
+.energy-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: white;
+  flex-shrink: 0;
+}
+
+.energy-fire { background-color: #FF6B35; }
+.energy-water { background-color: #6390F0; }
+.energy-grass { background-color: #7AC74C; }
+.energy-lightning { background-color: #F7D02C; color: #333; }
+.energy-psychic { background-color: #F95587; }
+.energy-fighting { background-color: #C22E28; }
+.energy-darkness { background-color: #705746; }
+.energy-metal { background-color: #B7B7CE; color: #333; }
+.energy-fairy { background-color: #D685AD; }
+.energy-dragon { background-color: #6F35FC; }
+.energy-colorless { background-color: #A8A77A; }
+
+/* --- Combat Info Grid --- */
+
+.combat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.combat-column h4 {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.combat-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+}
+
+/* --- Rules List --- */
+
+.rules-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.rules-list li {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+  padding-left: 1rem;
+  border-left: 3px solid var(--color-primary);
+}
+
+/* --- Format Legalities --- */
+
+.legality-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.legality-badge {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.3rem 0.75rem;
+  border-radius: 20px;
+  text-transform: capitalize;
+}
+
+.legality-legal {
+  background-color: rgba(34, 197, 94, 0.15);
+  color: #16a34a;
+}
+
+.legality-banned {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: #dc2626;
+}
+
+/* ============================================
    RESPONSIVE
    ============================================ */
 
@@ -408,5 +637,10 @@
 
   .listings-table table {
     min-width: 500px;
+  }
+
+  /* Stack combat info grid on mobile */
+  .combat-grid {
+    grid-template-columns: 1fr;
   }
 }
