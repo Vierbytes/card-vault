@@ -13,9 +13,11 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { userAPI } from '../services/api';
+import { userAPI, reviewAPI } from '../services/api';
 import { GiCardPick } from 'react-icons/gi';
 import Loader from '../components/Loader';
+import StarRating from '../components/StarRating';
+import ReviewList from '../components/ReviewList';
 import './UserProfile.css';
 
 function UserProfile() {
@@ -26,6 +28,7 @@ function UserProfile() {
   const [user, setUser] = useState(null);
   const [listings, setListings] = useState([]);
   const [tradeStats, setTradeStats] = useState(null);
+  const [reviewData, setReviewData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -71,16 +74,19 @@ function UserProfile() {
       setError(null);
 
       try {
-        // Fire all three requests at the same time
-        const [profileRes, listingsRes, statsRes] = await Promise.all([
+        // Fire all four requests at the same time
+        // Added review data fetch alongside the others
+        const [profileRes, listingsRes, statsRes, reviewRes] = await Promise.all([
           userAPI.getProfile(id),
           userAPI.getUserListings(id),
           userAPI.getUserTradeStats(id),
+          reviewAPI.getSellerReviews(id),
         ]);
 
         setUser(profileRes.data.data);
         setListings(listingsRes.data.data || []);
         setTradeStats(statsRes.data.data);
+        setReviewData(reviewRes.data.data);
       } catch (err) {
         console.error('Error fetching user profile:', err);
         setError('Failed to load user profile.');
@@ -171,8 +177,38 @@ function UserProfile() {
               <span className="up-stat-value">{tradeStats.offersReceived}</span>
               <span className="up-stat-label">Offers Received</span>
             </div>
+            {/* Seller rating - shows average stars if they have reviews */}
+            <div className="up-stat-card">
+              {reviewData && reviewData.reviewCount > 0 ? (
+                <>
+                  <span className="up-stat-value">
+                    {reviewData.averageRating.toFixed(1)}
+                  </span>
+                  <span className="up-stat-label">
+                    <StarRating
+                      rating={Math.round(reviewData.averageRating)}
+                      size="0.85rem"
+                    />
+                  </span>
+                </>
+              ) : (
+                <>
+                  <span className="up-stat-value">--</span>
+                  <span className="up-stat-label">Seller Rating</span>
+                </>
+              )}
+            </div>
           </div>
         </div>
+      )}
+
+      {/* Seller reviews section */}
+      {reviewData && (
+        <ReviewList
+          reviews={reviewData.reviews}
+          averageRating={reviewData.averageRating}
+          reviewCount={reviewData.reviewCount}
+        />
       )}
 
       {/* Active listings section */}

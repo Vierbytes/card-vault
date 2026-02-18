@@ -264,4 +264,20 @@ export const transactionAPI = {
   getAll: () => api.get('/transactions'),
 };
 
+// ============================================
+// REVIEW API CALLS
+// ============================================
+
+export const reviewAPI = {
+  // Submit a review for a completed transaction
+  create: (reviewData) => api.post('/reviews', reviewData),
+
+  // Get all reviews for a seller (public - used on profile pages)
+  getSellerReviews: (sellerId) => api.get(`/reviews/seller/${sellerId}`),
+
+  // Check if a specific transaction has been reviewed
+  getForTransaction: (transactionId) =>
+    api.get(`/reviews/transaction/${transactionId}`),
+};
+
 export default api;
