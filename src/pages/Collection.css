@@ -333,6 +333,140 @@
 }
 
 /* ============================================
+   SELL BUTTON
+   ============================================ */
+
+.btn-sell {
+  background-color: var(--color-success);
+  color: white;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.btn-sell:hover:not(:disabled) {
+  background-color: #16a34a;
+}
+
+/* ============================================
+   LIST FOR SALE MODAL
+   Reuses .modal-overlay and .modal-content base
+   styles from MakeOfferModal.css. These are just
+   the list-modal-specific additions.
+   ============================================ */
+
+.list-modal h2 {
+  font-size: 1.25rem;
+  margin-bottom: 1.5rem;
+  color: var(--color-text);
+}
+
+/* Card summary at top of modal */
+.list-card-summary {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: var(--color-background);
+  border-radius: var(--radius-md);
+  margin-bottom: 1.5rem;
+}
+
+.list-card-thumb {
+  width: 60px;
+  height: 84px;
+  flex-shrink: 0;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background-color: var(--color-surface);
+}
+
+.list-card-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.list-card-thumb .thumb-placeholder {
+  width: 100%;
+  height: 100%;
+  padding: 0.5rem;
+  color: var(--color-text-secondary);
+}
+
+.list-card-info h3 {
+  font-size: 0.95rem;
+  margin-bottom: 0.25rem;
+  color: var(--color-text);
+}
+
+.list-card-set,
+.list-card-condition {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 0.15rem;
+}
+
+.list-card-condition strong {
+  color: var(--color-text);
+}
+
+/* Form inside the modal */
+.list-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.list-form .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.list-form label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.list-form input,
+.list-form textarea {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  background-color: var(--color-background);
+  color: var(--color-text);
+  font-family: var(--font-family);
+  transition: border-color 0.2s ease;
+}
+
+.list-form input:focus,
+.list-form textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.list-form textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.price-hint {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+}
+
+/* Action buttons at the bottom of modal */
+.list-modal-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  margin-top: 0.5rem;
+}
+
+/* ============================================
    RESPONSIVE
    ============================================ */
 

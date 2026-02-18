@@ -11,8 +11,8 @@
 
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { collectionAPI } from '../services/api';
-import { FiPackage } from 'react-icons/fi';
+import { collectionAPI, listingAPI } from '../services/api';
+import { FiPackage, FiTag } from 'react-icons/fi';
 import { GiCardPick } from 'react-icons/gi';
 import useCardTilt from '../hooks/useCardTilt';
 import { useToast } from '../context/ToastContext';
@@ -36,6 +36,12 @@ function Collection() {
   // For editing quantity
   const [editingId, setEditingId] = useState(null);
   const [editQuantity, setEditQuantity] = useState(1);
+
+  // For "List for Sale" modal - listingItem being non-null means modal is open
+  const [listingItem, setListingItem] = useState(null);
+  const [listingPrice, setListingPrice] = useState('');
+  const [listingDescription, setListingDescription] = useState('');
+  const [listingSubmitting, setListingSubmitting] = useState(false);
 
   // Fetch collection on mount
   useEffect(() => {
@@ -105,7 +111,7 @@ function Collection() {
     }
   };
 
-  // Format condition for display
+  // Format condition for display (short labels for badges)
   const formatCondition = (condition) => {
     const conditions = {
       near_mint: 'NM',
@@ -115,6 +121,65 @@ function Collection() {
       damaged: 'DMG',
     };
     return conditions[condition] || condition;
+  };
+
+  // Full condition names for the listing modal
+  const formatConditionFull = (condition) => {
+    const conditions = {
+      near_mint: 'Near Mint',
+      lightly_played: 'Lightly Played',
+      moderately_played: 'Moderately Played',
+      heavily_played: 'Heavily Played',
+      damaged: 'Damaged',
+    };
+    return conditions[condition] || condition;
+  };
+
+  // Open the "List for Sale" modal and pre-fill price from market value
+  const handleOpenListModal = (item) => {
+    setListingItem(item);
+    setListingPrice(
+      item.card?.currentPrice > 0
+        ? item.card.currentPrice.toFixed(2)
+        : ''
+    );
+    setListingDescription('');
+  };
+
+  // Close the listing modal and reset state
+  const handleCloseListModal = () => {
+    setListingItem(null);
+    setListingPrice('');
+    setListingDescription('');
+    setListingSubmitting(false);
+  };
+
+  // Submit the listing to the marketplace
+  const handleCreateListing = async (e) => {
+    e.preventDefault();
+
+    if (!listingPrice || parseFloat(listingPrice) <= 0) {
+      showToast('Please enter a valid price', 'error');
+      return;
+    }
+
+    setListingSubmitting(true);
+
+    try {
+      await listingAPI.create({
+        cardId: listingItem.card._id,
+        price: parseFloat(listingPrice),
+        condition: listingItem.condition || 'near_mint',
+        description: listingDescription.trim(),
+      });
+
+      showToast('Card listed for sale!');
+      handleCloseListModal();
+    } catch (err) {
+      const errorMsg = err.response?.data?.message || 'Failed to create listing';
+      showToast(errorMsg, 'error');
+      setListingSubmitting(false);
+    }
   };
 
   return (
@@ -229,6 +294,12 @@ function Collection() {
                         Edit Qty
                       </button>
                       <button
+                        className="btn btn-sm btn-sell"
+                        onClick={() => handleOpenListModal(item)}
+                      >
+                        <FiTag /> Sell
+                      </button>
+                      <button
                         className="btn btn-sm btn-danger"
                         onClick={() => handleRemove(item._id, item.card?.name)}
                       >
@@ -241,6 +312,84 @@ function Collection() {
               <div className="light-shadow" />
             </div>
           ))}
+        </div>
+      )}
+      {/* List for Sale Modal */}
+      {listingItem && (
+        <div className="modal-overlay" onClick={handleCloseListModal}>
+          <div className="modal-content list-modal" onClick={(e) => e.stopPropagation()}>
+            <h2>List for Sale</h2>
+
+            {/* Card summary */}
+            <div className="list-card-summary">
+              <div className="list-card-thumb">
+                {listingItem.card?.imageUrl ? (
+                  <img src={listingItem.card.imageUrl} alt={listingItem.card?.name} />
+                ) : (
+                  <GiCardPick className="thumb-placeholder" />
+                )}
+              </div>
+              <div className="list-card-info">
+                <h3>{listingItem.card?.name || 'Unknown Card'}</h3>
+                <p className="list-card-set">{listingItem.card?.setName}</p>
+                <p className="list-card-condition">
+                  Condition: <strong>{formatConditionFull(listingItem.condition)}</strong>
+                </p>
+              </div>
+            </div>
+
+            {/* Listing form */}
+            <form onSubmit={handleCreateListing} className="list-form">
+              <div className="form-group">
+                <label htmlFor="listingPrice">Price ($)</label>
+                <input
+                  type="number"
+                  id="listingPrice"
+                  value={listingPrice}
+                  onChange={(e) => setListingPrice(e.target.value)}
+                  placeholder="0.00"
+                  min="0.01"
+                  step="0.01"
+                  required
+                />
+                {listingItem.card?.currentPrice > 0 && (
+                  <span className="price-hint">
+                    Market price: ${listingItem.card.currentPrice.toFixed(2)}
+                  </span>
+                )}
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="listingDescription">Description (optional)</label>
+                <textarea
+                  id="listingDescription"
+                  value={listingDescription}
+                  onChange={(e) => setListingDescription(e.target.value)}
+                  placeholder="Any additional details about this card..."
+                  rows="3"
+                  maxLength="500"
+                />
+              </div>
+
+              <div className="list-modal-actions">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={handleCloseListModal}
+                  disabled={listingSubmitting}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={listingSubmitting}
+                >
+                  {listingSubmitting ? 'Listing...' : 'List for Sale'}
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
     </div>
