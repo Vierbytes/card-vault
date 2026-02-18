@@ -99,6 +99,25 @@
   border-color: var(--color-primary);
 }
 
+/* Search input with icon inside */
+.search-input-wrapper {
+  position: relative;
+}
+
+.search-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+  pointer-events: none;
+}
+
+.search-input-wrapper input {
+  padding-left: 2.25rem;
+}
+
 .price-inputs {
   display: flex;
   align-items: center;

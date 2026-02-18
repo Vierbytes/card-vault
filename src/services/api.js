@@ -144,6 +144,7 @@ export const cardAPI = {
 export const listingAPI = {
   getAll: (params) => api.get('/listings', { params }),
   getById: (listingId) => api.get(`/listings/${listingId}`),
+  getFilters: () => api.get('/listings/filters'),
   getMine: (status) => api.get('/listings/mine', { params: { status } }),
   create: (listingData) => api.post('/listings', listingData),
   update: (listingId, listingData) => api.put(`/listings/${listingId}`, listingData),
