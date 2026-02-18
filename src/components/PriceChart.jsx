@@ -147,7 +147,7 @@ function PriceChart({ cardId, duration = '30d' }) {
       },
       y: {
         grid: {
-          color: 'rgba(0, 0, 0, 0.05)',
+          color: 'rgba(128, 128, 128, 0.15)',
         },
         ticks: {
           callback: (value) => `$${value}`,
