@@ -1,0 +1,155 @@
+/**
+ * Review List Styles
+ *
+ * Used on the public profile page to show seller reviews.
+ * Prefixed with 'rl-' to avoid conflicts with other components.
+ * Follows the same card/section styling as UserProfile.
+ */
+
+/* ============================================
+   SECTION LAYOUT
+   ============================================ */
+
+.rl-section {
+  margin-top: 2rem;
+}
+
+.rl-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.rl-header h2 {
+  font-size: 1.25rem;
+}
+
+/* Average rating display next to the header */
+.rl-average {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.rl-average-number {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+/* ============================================
+   EMPTY STATE
+   ============================================ */
+
+.rl-empty {
+  text-align: center;
+  padding: 2rem;
+  color: var(--color-text-secondary);
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+}
+
+/* ============================================
+   REVIEW CARDS
+   ============================================ */
+
+.rl-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.rl-card {
+  background: var(--color-surface);
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Header row: reviewer info on left, date on right */
+.rl-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.rl-reviewer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+.rl-reviewer:hover .rl-reviewer-name {
+  color: var(--color-primary);
+}
+
+/* Small avatar circle */
+.rl-reviewer-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--color-background);
+  flex-shrink: 0;
+}
+
+.rl-reviewer-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.rl-avatar-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.rl-reviewer-name {
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.rl-date {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+}
+
+/* Stars row */
+.rl-stars {
+  margin-bottom: 0.5rem;
+}
+
+/* Comment text */
+.rl-comment {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 480px) {
+  .rl-card {
+    padding: 0.875rem 1rem;
+  }
+
+  .rl-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
