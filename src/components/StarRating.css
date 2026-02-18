@@ -1,0 +1,49 @@
+/**
+ * Star Rating Styles
+ *
+ * Handles both display and interactive modes.
+ * Filled stars get a golden color with fill, empty ones stay as outlines.
+ * In interactive mode, stars show a cursor pointer and hover effect.
+ */
+
+/* ============================================
+   BASE STAR LAYOUT
+   ============================================ */
+
+.star-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.1rem;
+}
+
+.star {
+  display: inline-flex;
+  align-items: center;
+  color: var(--color-border);
+  transition: color 0.15s ease, transform 0.15s ease;
+  line-height: 1;
+}
+
+/* Filled star - golden yellow with fill */
+.star--filled {
+  color: #f59e0b;
+  fill: #f59e0b;
+}
+
+/* The SVG icon inside the star needs fill to actually color in */
+.star--filled svg {
+  fill: #f59e0b;
+  stroke: #f59e0b;
+}
+
+/* ============================================
+   INTERACTIVE MODE
+   ============================================ */
+
+.star-rating--interactive .star {
+  cursor: pointer;
+}
+
+.star-rating--interactive .star:hover {
+  transform: scale(1.15);
+}
