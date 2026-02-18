@@ -25,6 +25,67 @@ import PriceChart from '../components/PriceChart';
 import Loader from '../components/Loader';
 import './CardDetails.css';
 
+// Energy type icons - these are the official Pokemon TCG energy symbols
+// The API returns names like "Fire", "Lightning", "Darkness" but the icon files
+// use slightly different names so I need this mapping to connect them
+import fireIcon from '../assets/energy/fire-en.png';
+import waterIcon from '../assets/energy/water-en.png';
+import grassIcon from '../assets/energy/grass-en.png';
+import electricIcon from '../assets/energy/electric-en.png';
+import psychicIcon from '../assets/energy/psychic-en.png';
+import fightingIcon from '../assets/energy/fighting-en.png';
+import darkIcon from '../assets/energy/dark-en.png';
+import steelIcon from '../assets/energy/steel-en.png';
+import dragonIcon from '../assets/energy/dragon-en.png';
+import colorlessIcon from '../assets/energy/colorless-en.png';
+
+// Map the energy type string from the API to the matching icon file
+// Some types have different names in the API vs the file names:
+// "Lightning" -> electric, "Darkness" -> dark, "Metal" -> steel
+// Also including single-letter codes (R, W, G, etc.) as fallbacks
+// in case the backend returns raw Pokewallet data that didn't get parsed
+const energyIcons = {
+  fire: fireIcon,
+  water: waterIcon,
+  grass: grassIcon,
+  lightning: electricIcon,
+  electric: electricIcon,
+  psychic: psychicIcon,
+  fighting: fightingIcon,
+  darkness: darkIcon,
+  dark: darkIcon,
+  metal: steelIcon,
+  steel: steelIcon,
+  dragon: dragonIcon,
+  colorless: colorlessIcon,
+  fairy: psychicIcon,
+  // Single-letter energy codes from Pokewallet's raw format
+  r: fireIcon,
+  w: waterIcon,
+  g: grassIcon,
+  l: electricIcon,
+  p: psychicIcon,
+  f: fightingIcon,
+  d: darkIcon,
+  m: steelIcon,
+  y: psychicIcon,
+  n: dragonIcon,
+  c: colorlessIcon,
+};
+
+// Helper to look up the energy icon for a type string
+// Handles edge cases where the type might have extra characters
+// like "Wx2" from unparsed Pokewallet weakness data
+const getEnergyIcon = (type) => {
+  if (!type) return null;
+  const key = type.toLowerCase();
+  // Try exact match first
+  if (energyIcons[key]) return energyIcons[key];
+  // Try just the first character (handles raw codes like "Wx2")
+  if (energyIcons[key.charAt(0)]) return energyIcons[key.charAt(0)];
+  return null;
+};
+
 /**
  * Extract the base Pokemon name from a TCG card name
  *
@@ -426,10 +487,14 @@ function CardDetails() {
                         {attack.cost.map((energy, i) => (
                           <span
                             key={i}
-                            className={`energy-badge energy-${energy.toLowerCase()}`}
+                            className="energy-badge"
                             title={energy}
                           >
-                            {energy.charAt(0)}
+                            {getEnergyIcon(energy) ? (
+                              <img src={getEnergyIcon(energy)} alt={energy} />
+                            ) : (
+                              energy.charAt(0)
+                            )}
                           </span>
                         ))}
                       </div>
@@ -459,10 +524,14 @@ function CardDetails() {
                     {card.mechanics.weaknesses.map((w, i) => (
                       <div key={i} className="combat-item">
                         <span
-                          className={`energy-badge energy-${w.type.toLowerCase()}`}
+                          className="energy-badge"
                           title={w.type}
                         >
-                          {w.type.charAt(0)}
+                          {getEnergyIcon(w.type) ? (
+                            <img src={getEnergyIcon(w.type)} alt={w.type} />
+                          ) : (
+                            w.type.charAt(0)
+                          )}
                         </span>
                         <span>{w.value}</span>
                       </div>
@@ -477,10 +546,14 @@ function CardDetails() {
                     {card.mechanics.resistances.map((r, i) => (
                       <div key={i} className="combat-item">
                         <span
-                          className={`energy-badge energy-${r.type.toLowerCase()}`}
+                          className="energy-badge"
                           title={r.type}
                         >
-                          {r.type.charAt(0)}
+                          {getEnergyIcon(r.type) ? (
+                            <img src={getEnergyIcon(r.type)} alt={r.type} />
+                          ) : (
+                            r.type.charAt(0)
+                          )}
                         </span>
                         <span>{r.value}</span>
                       </div>
@@ -496,10 +569,14 @@ function CardDetails() {
                       {card.mechanics.retreatCost.map((energy, i) => (
                         <span
                           key={i}
-                          className={`energy-badge energy-${energy.toLowerCase()}`}
+                          className="energy-badge"
                           title={energy}
                         >
-                          {energy.charAt(0)}
+                          {getEnergyIcon(energy) ? (
+                            <img src={getEnergyIcon(energy)} alt={energy} />
+                          ) : (
+                            energy.charAt(0)
+                          )}
                         </span>
                       ))}
                     </div>

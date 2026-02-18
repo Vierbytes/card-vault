@@ -508,34 +508,25 @@
 }
 
 /* --- Energy Type Badges ---
-   Small colored circles that represent the energy cost of attacks,
-   weaknesses, resistances, and retreat cost. Each Pokemon type has
-   its own color. */
+   Now using actual Pokemon TCG energy icons from assets/energy.
+   The icons are small PNG images that replace the old colored circles
+   with single letters. I kept the badge as a flex container so it
+   still lines up nicely in the attack cost and combat info sections. */
 
 .energy-badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  font-size: 0.65rem;
-  font-weight: 700;
-  color: white;
+  width: 24px;
+  height: 24px;
   flex-shrink: 0;
 }
 
-.energy-fire { background-color: #FF6B35; }
-.energy-water { background-color: #6390F0; }
-.energy-grass { background-color: #7AC74C; }
-.energy-lightning { background-color: #F7D02C; color: #333; }
-.energy-psychic { background-color: #F95587; }
-.energy-fighting { background-color: #C22E28; }
-.energy-darkness { background-color: #705746; }
-.energy-metal { background-color: #B7B7CE; color: #333; }
-.energy-fairy { background-color: #D685AD; }
-.energy-dragon { background-color: #6F35FC; }
-.energy-colorless { background-color: #A8A77A; }
+.energy-badge img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
 
 /* --- Combat Info Grid --- */
 
