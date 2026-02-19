@@ -2,6 +2,10 @@
 
 React + Vite client for the CardVault Pokemon TCG marketplace.
 
+## Live App
+
+[https://card-vault-teal.vercel.app/](https://card-vault-teal.vercel.app/)
+
 ## Features
 
 - Browse marketplace listings and card details
